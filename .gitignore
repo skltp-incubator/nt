@@ -19,3 +19,6 @@ modules/web/src/test/fitnesse/FitNesseRoot/ErrorLogs/
 
 # Do not track generated java files
 composites/schemas/src/main/generated/
+
+# Mule Studio
+.studio
