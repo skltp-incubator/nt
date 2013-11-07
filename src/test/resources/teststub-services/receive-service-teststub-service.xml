@@ -17,9 +17,9 @@
 
 
 	<simple-service 
-		name="mySample-teststub-service"
-        address="${MYSAMPLE_TESTSTUB_INBOUND_URL}?connector=soitoolkit-http-connector" 
-        component-class="se.skltp.nt.mysample.MySampleTestProducer"
+		name="receive-service-teststub-service"
+        address="${RECEIVE-SERVICE_TESTSTUB_INBOUND_URL}?connector=soitoolkit-http-connector" 
+        component-class="se.skltp.nt.receiveservice.ReceiveServiceTestProducer"
         type="jax-ws" />
  
 </mule>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="nt-jdbc-connector">
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#1">
+        <properties>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="soitoolkit-jdbc-datasource"/>
+            <property name="pollingFrequency" value="${SOITOOLKIT_JDBC_CON_POLLING_MS}"/>
+            <property name="queryTimeout"/>
+            <property name="name" value="soitoolkit-jdbc-connector"/>
+            <property name="validateConnections"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="1"/>
+            <property name="dataSource-ref to JDBC DataSource" value="soitoolkit-jdbc-datasource"/>
+        </properties>
+    </global-element>
+</mule-configuration>

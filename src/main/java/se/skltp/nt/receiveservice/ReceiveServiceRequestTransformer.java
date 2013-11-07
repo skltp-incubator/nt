@@ -1,4 +1,4 @@
-package se.skltp.nt.mysample;
+package se.skltp.nt.receiveservice;
 
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.jaxb.JaxbUtil;
 import org.soitoolkit.refapps.sd.sample.schema.v1.Sample;
 
-public class MySampleRequestTransformer extends AbstractMessageTransformer {
+public class ReceiveServiceRequestTransformer extends AbstractMessageTransformer {
 
-	private static final Logger log = LoggerFactory.getLogger(MySampleRequestTransformer.class);
+	private static final Logger log = LoggerFactory.getLogger(ReceiveServiceRequestTransformer.class);
 
 	private static final JaxbUtil jaxbUtil = new JaxbUtil(Sample.class);
 

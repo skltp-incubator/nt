@@ -1,4 +1,4 @@
-package se.skltp.nt.mysample;
+package se.skltp.nt.receiveservice;
 
 import java.util.StringTokenizer;
 
@@ -9,9 +9,9 @@ import org.mule.transformer.AbstractMessageTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MySampleResponseTransformer extends AbstractMessageTransformer {
+public class ReceiveServiceResponseTransformer extends AbstractMessageTransformer {
 
-	private static final Logger log = LoggerFactory.getLogger(MySampleResponseTransformer.class);
+	private static final Logger log = LoggerFactory.getLogger(ReceiveServiceResponseTransformer.class);
 
     /**
      * Message aware transformer that ...

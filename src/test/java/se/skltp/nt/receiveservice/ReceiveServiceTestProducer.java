@@ -1,4 +1,4 @@
-package se.skltp.nt.mysample;
+package se.skltp.nt.receiveservice;
 
 import java.util.StringTokenizer;
 
@@ -17,19 +17,19 @@ import org.soitoolkit.refapps.sd.sample.wsdl.v1.Fault;
 import org.soitoolkit.refapps.sd.sample.wsdl.v1.SampleInterface;
 
 @WebService(serviceName = "sampleService", portName = "samplePort", targetNamespace = "urn:org.soitoolkit.refapps.sd.sample.wsdl:v1", name = "sampleService")
-public class MySampleTestProducer implements SampleInterface {
+public class ReceiveServiceTestProducer implements SampleInterface {
 
 	public static final String TEST_ID_OK               = "1234567890";
 	public static final String TEST_ID_FAULT_INVALID_ID = "-1";
 	public static final String TEST_ID_FAULT_TIMEOUT    = "0";
 	
-	private static final Logger log = LoggerFactory.getLogger(MySampleTestProducer.class);
+	private static final Logger log = LoggerFactory.getLogger(ReceiveServiceTestProducer.class);
     private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
 	private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.getString("SERVICE_TIMEOUT_MS"));
 
 	public SampleResponse sample(Sample request) throws Fault {
 
-		log.info("MySampleTestProducer received the request: {}", request);
+		log.info("ReceiveServiceTestProducer received the request: {}", request);
 
 		String id = request.getId();
 

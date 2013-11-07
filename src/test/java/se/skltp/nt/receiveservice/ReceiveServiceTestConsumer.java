@@ -1,4 +1,4 @@
-package se.skltp.nt.mysample;
+package se.skltp.nt.receiveservice;
 
 import static se.skltp.nt.NtMuleServer.getAddress;
 
@@ -13,22 +13,22 @@ import org.soitoolkit.refapps.sd.sample.schema.v1.SampleResponse;
 import org.soitoolkit.refapps.sd.sample.wsdl.v1.Fault;
 import org.soitoolkit.refapps.sd.sample.wsdl.v1.SampleInterface;
 
-public class MySampleTestConsumer {
+public class ReceiveServiceTestConsumer {
 
-	private static final Logger log = LoggerFactory.getLogger(MySampleTestConsumer.class);
+	private static final Logger log = LoggerFactory.getLogger(ReceiveServiceTestConsumer.class);
 
 	private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
 
 	private SampleInterface _service = null;
 	    
-    public MySampleTestConsumer(String serviceAddress) {
+    public ReceiveServiceTestConsumer(String serviceAddress) {
 		JaxWsProxyFactoryBean proxyFactory = new JaxWsProxyFactoryBean();
 		proxyFactory.setServiceClass(SampleInterface.class);
 		proxyFactory.setAddress(serviceAddress);
 		
 		//Used for HTTPS
 		SpringBusFactory bf = new SpringBusFactory();
-		URL cxfConfig = MySampleTestConsumer.class.getClassLoader().getResource("cxf-test-consumer-config.xml");
+		URL cxfConfig = ReceiveServiceTestConsumer.class.getClassLoader().getResource("cxf-test-consumer-config.xml");
 		if (cxfConfig != null) {
 			proxyFactory.setBus(bf.createBus(cxfConfig));
 		}
@@ -37,10 +37,10 @@ public class MySampleTestConsumer {
     }
 
     public static void main(String[] args) throws Fault {
-            String serviceAddress = getAddress("MYSAMPLE_INBOUND_URL");
+            String serviceAddress = getAddress("RECEIVE-SERVICE_INBOUND_URL");
             String personnummer = "1234567890";
 
-            MySampleTestConsumer consumer = new MySampleTestConsumer(serviceAddress);
+            ReceiveServiceTestConsumer consumer = new ReceiveServiceTestConsumer(serviceAddress);
             SampleResponse response = consumer.callService(personnummer);
             log.info("Returned value = " + response.getValue());
     }
