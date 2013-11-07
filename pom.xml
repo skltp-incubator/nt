@@ -5,36 +5,41 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
 [soi-toolkit.gen.type=services]
 [soi-toolkit.gen.createDate=2013-11-06T12:42:41.486+01:00]
 [soi-toolkit.gen.artifactId=nt]
---><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.soitoolkit.commons.poms</groupId>
         <artifactId>soitoolkit-default-parent</artifactId>
         <version>0.6.0</version>
     </parent>
-    
+
     <groupId>se.skltp.nt</groupId>
     <artifactId>nt</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>mule</packaging>
     <name>nt</name>
 
+    <properties>
+        <schema.path>src/main/resources/schemas</schema.path>
+    </properties>
     <scm>
         <!-- TODO: Sample <scm>-tag, update to reflect you own environment! -->
         <connection>scm:svn:https://my-subversion-server/svn/nt/trunk</connection>
         <developerConnection>scm:svn:https://my-subversion-server/svn/nt/trunk</developerConnection>
         <url>https://my-subversion-server/svn/nt/trunk</url>
     </scm>
-    
+
     <distributionManagement>
         <!-- TODO: Sample <distributionManagement>-tag, update to reflect you own environment! -->
         <snapshotRepository>
             <id>snapshots</id>
             <name>Snapshot Repository</name>
             <url>http://my-maven-repo-server/repositories/snapshots</url>
-        </snapshotRepository>  
+        </snapshotRepository>
         <repository>
             <id>releases</id>
             <name>Release Repository</name>
@@ -42,33 +47,33 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
         </repository>
     </distributionManagement>
 
-	<dependencies>	
-		<dependency>
-		  <groupId>org.soitoolkit.commons.components</groupId>
-			<artifactId>soitoolkit-commons-mule</artifactId>
-			<version>${soitoolkit.version}</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.soitoolkit.commons.components</groupId>
+            <artifactId>soitoolkit-commons-mule</artifactId>
+            <version>${soitoolkit.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.soitoolkit.commons.poms</groupId>
-			<artifactId>soitoolkit-test-dependencies</artifactId>
-			<version>${soitoolkit.version}</version>
-			<type>pom</type>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.soitoolkit.commons.poms</groupId>
+            <artifactId>soitoolkit-test-dependencies</artifactId>
+            <version>${soitoolkit.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.soitoolkit.commons.poms.mule-dependencies</groupId>
-			<artifactId>soitoolkit-mule-3.3.0-dependencies</artifactId>
-			<version>${soitoolkit.version}</version>
-			<type>pom</type>
-		</dependency>
-	<dependency>
-			<groupId>org.soitoolkit.refapps.sd</groupId>
-			<artifactId>soitoolkit-refapps-sample-schemas</artifactId>
-			<version>${soitoolkit.version}</version>
-		</dependency>
-  </dependencies> 
+        <dependency>
+            <groupId>org.soitoolkit.commons.poms.mule-dependencies</groupId>
+            <artifactId>soitoolkit-mule-3.3.0-dependencies</artifactId>
+            <version>${soitoolkit.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.soitoolkit.refapps.sd</groupId>
+            <artifactId>soitoolkit-refapps-sample-schemas</artifactId>
+            <version>${soitoolkit.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
@@ -81,7 +86,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
             </resource>
         </resources>
 
-		<plugins>   
+        <plugins>
             <plugin>
                 <!-- Add mule-nature to the eclipse-.project-file -->
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -94,6 +99,57 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                     </additionalProjectnatures>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceRoot>${generated-sources}</sourceRoot>
+                            <wsdlOptions>
+
+                                <wsdlOption>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        Note: be careful when changing this - must be in sync for all
+                                        schemas generations in this namespace!
+                                        <extraarg>
+                                            urn:riv:infrastructure:itintegration:notification:ReceiveNotification:1:rivtabp21=se.riv.infrastructure.itintegration.notification.ReceiveNotification.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:infrastructure:itintegration:notification:1=se.riv.infrastructure.itintegration.notification.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>                                                           x
+                                            urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1=se.riv.infrastructure.itintegration.notification.ReceiveNotificationResponder.v1
+                                        </extraarg>
+                                    </extraargs>
+                                    <wsdl>
+                                        ${schema.path}/interactions/ReceiveNotificationInteraction/ReceiveNotificationInteraction_1.0_RIVTABP21.wsdl
+                                    </wsdl>
+                                </wsdlOption>
+
+                            </wsdlOptions>
+
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.mule.tools</groupId>
@@ -113,92 +169,92 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                     </inclusions>
                     <exclusions>
 
-                      <!-- xercesImpl is endorsed in MULE_HOME/lib/endorsed, see issue 274 -->
-                      <exclusion>
-                        <groupId>xerces</groupId>
-                        <artifactId>xercesImpl</artifactId>
-                      </exclusion>
+                        <!-- xercesImpl is endorsed in MULE_HOME/lib/endorsed, see issue 274 -->
+                        <exclusion>
+                            <groupId>xerces</groupId>
+                            <artifactId>xercesImpl</artifactId>
+                        </exclusion>
 
-                      <!-- log4j is already included in MULE_HOME/lib/boot, see issue 283 -->
-                      <exclusion>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-                      </exclusion>
+                        <!-- log4j is already included in MULE_HOME/lib/boot, see issue 283 -->
+                        <exclusion>
+                            <groupId>log4j</groupId>
+                            <artifactId>log4j</artifactId>
+                        </exclusion>
 
-                      <!-- junit is already included in MULE_HOME/lib/opt, see issue 283 -->
-                      <exclusion>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-                      </exclusion>
+                        <!-- junit is already included in MULE_HOME/lib/opt, see issue 283 -->
+                        <exclusion>
+                            <groupId>junit</groupId>
+                            <artifactId>junit</artifactId>
+                        </exclusion>
 
-                      <!-- servlet-api-2.5 is already included in MULE_HOME/lib/opt, see issue 283 -->
-                      <exclusion>
-						<groupId>org.mortbay.jetty</groupId>
-						<artifactId>servlet-api-2.5</artifactId>
-                      </exclusion>
+                        <!-- servlet-api-2.5 is already included in MULE_HOME/lib/opt, see issue 283 -->
+                        <exclusion>
+                            <groupId>org.mortbay.jetty</groupId>
+                            <artifactId>servlet-api-2.5</artifactId>
+                        </exclusion>
 
-                      <!-- jug is already included in MULE_HOME/lib/opt, see issue 283 -->
-                      <exclusion>
-						<groupId>org.safehaus.jug</groupId>
-						<artifactId>jug.osgi</artifactId>
-                      </exclusion>
-                      <!-- activemq needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
-                      <exclusion>
-						<groupId>org.apache.activemq</groupId>
-						<artifactId>activemq-core</artifactId>
-                      </exclusion>
-                      <exclusion>
-						<groupId>org.apache.xbean</groupId>
-						<artifactId>xbean-spring</artifactId>
-                      </exclusion>
+                        <!-- jug is already included in MULE_HOME/lib/opt, see issue 283 -->
+                        <exclusion>
+                            <groupId>org.safehaus.jug</groupId>
+                            <artifactId>jug.osgi</artifactId>
+                        </exclusion>
+                        <!-- activemq needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
+                        <exclusion>
+                            <groupId>org.apache.activemq</groupId>
+                            <artifactId>activemq-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.apache.xbean</groupId>
+                            <artifactId>xbean-spring</artifactId>
+                        </exclusion>
 
-                      <!-- hornetq needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
-                      <exclusion>
-						<groupId>org.hornetq</groupId>
-						<artifactId>hornetq-core-client</artifactId>
-                      </exclusion>
-                      <exclusion>
-				        <groupId>org.hornetq</groupId>
-				        <artifactId>hornetq-jms</artifactId>
-                      </exclusion>
-                      <exclusion>
-						<groupId>org.jboss.netty</groupId>
-						<artifactId>netty</artifactId>
-                      </exclusion>
+                        <!-- hornetq needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
+                        <exclusion>
+                            <groupId>org.hornetq</groupId>
+                            <artifactId>hornetq-core-client</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.hornetq</groupId>
+                            <artifactId>hornetq-jms</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jboss.netty</groupId>
+                            <artifactId>netty</artifactId>
+                        </exclusion>
 
-                      <!-- jtds (JDBC driver fpr Microsoft SQL Server) needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
-                      <exclusion>
-						<groupId>net.sourceforge.jtds</groupId>
-						<artifactId>jtds</artifactId>
-                      </exclusion>
+                        <!-- jtds (JDBC driver fpr Microsoft SQL Server) needs to be added manually to MULE_HOME/lib/user if required, see issue 283 -->
+                        <exclusion>
+                            <groupId>net.sourceforge.jtds</groupId>
+                            <artifactId>jtds</artifactId>
+                        </exclusion>
 
                     </exclusions>
                 </configuration>
             </plugin>
-            
+
             <plugin>
-              <artifactId>maven-jar-plugin</artifactId>
-              <configuration>
-                <!-- 
-                 if no classifier is declared, then a mvn install results in a file in
-                 the local repo: ic2-1.0.0-SNAPSHOT.mule
-                 which is a jar-file - only strangely named and with a bad extension
-                -->
-                <classifier>core</classifier>
-                <excludes>
-                  <exclude>log4j.xml</exclude>
-                </excludes>
-              </configuration>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>jar</goal>
-                  </goals>
-                </execution>
-              </executions>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!--
+                     if no classifier is declared, then a mvn install results in a file in
+                     the local repo: ic2-1.0.0-SNAPSHOT.mule
+                     which is a jar-file - only strangely named and with a bad extension
+                    -->
+                    <classifier>core</classifier>
+                    <excludes>
+                        <exclude>log4j.xml</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-            
-      </plugins>
+
+        </plugins>
 
     </build>
 
