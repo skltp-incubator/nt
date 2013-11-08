@@ -71,6 +71,9 @@
 
         <!-- Import the SFTP-connector used in production here, embedded SFTP-connector used for integration tests are loaded by the *IntegratIonTest.java classes directly -->
         <spring:import resource="classpath:soitoolkit-mule-sftp-connector-external.xml"/>
+        
+        <!-- Dynamic flows -->
+	    <spring:bean id="initializer" class="se.skltp.nt.intsvc.dynamicFlows.Initializer"/>
 
     </spring:beans>
 

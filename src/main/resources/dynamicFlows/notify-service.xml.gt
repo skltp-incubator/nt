@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" 
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+    xmlns:https="http://www.mulesoft.org/schema/mule/https"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:spring="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-current.xsd 
+        http://www.mulesoft.org/schema/mule/cxf       http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
+        http://www.mulesoft.org/schema/mule/jms       http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+        http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd 
+        http://www.mulesoft.org/schema/mule/core      http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+        http://www.mulesoft.org/schema/mule/https     http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd 
+        http://www.mulesoft.org/schema/mule/http      http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+<% if (LOGICAL_ADDRESSES.size() > 0) { %>
+    <!-- JMS Connector for the durable topic subscribers -->
+    <jms:connector
+        name="skltp-ei-jms-topic-connector"
+        connectionFactory-ref="soitoolkit-jms-connection-factory"
+        clientId="SKLTP-EI"
+        durable="true" 
+        persistentDelivery="true"
+        maxRedelivery="-1"
+        specification="1.1" 
+        disableTemporaryReplyToDestinations="true" 
+        validateConnections="true"
+    />
+<% } %>
+
+
+<% LOGICAL_ADDRESSES.each { LOGICAL_ADDRESS -> %>
+
+    <flow name="notify-service-${LOGICAL_ADDRESS}">
+        <jms:inbound-endpoint 
+            connector-ref="skltp-ei-jms-topic-connector"
+            topic="${NOTIFY_TOPIC}" 
+            durableName="${LOGICAL_ADDRESS}" 
+            transformer-refs="logMsgIn" 
+            doc:name="JMS Topic">
+            <jms:transaction action="ALWAYS_BEGIN"/>
+        </jms:inbound-endpoint>
+
+	
+		 <logger level="INFO" doc:name="Logger"/>
+          <jms:transaction action="ALWAYS_JOIN"/>
+          
+        <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
+    </flow>
+<% } %>
+</mule>
