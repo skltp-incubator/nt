@@ -131,7 +131,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
-                                        <extraarg>                                                           x
+                                        <extraarg>                                                           
                                             urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1=se.riv.infrastructure.itintegration.notification.ReceiveNotificationResponder.v1
                                         </extraarg>
                                     </extraargs>

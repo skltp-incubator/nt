@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="receive-service">
-    <flow SubFlow="false" name="receive-service-service" entity-id="65226965-fb9b-4cd7-b010-6cdd7623851a">
+    <flow SubFlow="false" name="receive-service" entity-id="4e21cee3-f5dc-4cd6-9f97-031d507cd556">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
+            <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
-            <property name="tracking:enable-default-events"/>
             <property name="auxiliary;index" value="1"/>
+            <property name="tracking:enable-default-events"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
             <graphicalData x="0" y="0" width="0" height="0"/>
             <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
-                <graphicalData x="19" y="193" width="68" height="200"/>
+                <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="port"/>
                     <property name="host"/>
@@ -25,7 +26,7 @@
                     <property name="exchange-pattern" value="request-response"/>
                     <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs" value="objToStr logReqIn"/>
+                    <property name="transformer-refs" value="logReqIn"/>
                     <property name="httpLabel"/>
                     <property name="address" value="${RECEIVE-SERVICE_INBOUND_URL}"/>
                     <property name="path"/>
@@ -33,14 +34,14 @@
                     <property name="responseTransformer-refs" value="createSoapFaultIfException logRespOut"/>
                     <property name="method"/>
                     <property name="user"/>
+                    <property name="auxiliary;index" value="2"/>
                     <property name="responseTimeout"/>
                     <property name="mimeType"/>
-                    <property name="auxiliary;index" value="2"/>
                     <property name="connector-ref" value="soitoolkit-http-connector"/>
                 </properties>
             </endpoint>
             <pattern name="SOAP" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#1">
-                <graphicalData x="147" y="193" width="68" height="200"/>
+                <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="port"/>
                     <property name="wsdlLocation"/>
@@ -53,59 +54,13 @@
                     <property name="onException"/>
                     <property name="service"/>
                     <property name="mtomEnabled"/>
-                    <property name="soapVersion"/>
                     <property name="enableMuleSoapHeaders"/>
+                    <property name="soapVersion"/>
                     <property name="auxiliary;index" value="3"/>
                 </properties>
             </pattern>
-            <response index="4" entity-id="response#1">
-                <graphicalData x="275" y="310" width="146" height="114"/>
-                <compartment entity-id="compartment#1">
-                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
-                        <pattern name="transform-response" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#1">
-                            <graphicalData x="0" y="0" width="0" height="0"/>
-                            <properties>
-<property name="returnClass"/>
-<property name="ignoreBadInput"/>
-<property name="encoding"/>
-<property name="class" value="se.skltp.nt.receiveservice.ReceiveServiceResponseTransformer"/>
-<property name="mimeType"/>
-<property name="auxiliary;index" value="5"/>
-                            </properties>
-                        </pattern>
-                    </lane>
-                </compartment>
-            </response>
-            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="JMS" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
-                <graphicalData x="609" y="193" width="68" height="67"/>
-                <properties>
-                    <property name="topic" value="NotificationTopic"/>
-                    <property name="queue"/>
-                    <property name="durableName"/>
-                    <property name="businessEventsLabel"/>
-                    <property name="disableTransportTransformer"/>
-                    <property name="disableTemporaryReplyToDestinations"/>
-                    <property name="exchange-pattern"/>
-                    <property name="tracking:enable-default-events"/>
-                    <property name="ref"/>
-                    <property name="transformer-refs"/>
-                    <property name="address"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
-                    <property name="auxiliary;index" value="7"/>
-                    <property name="mimeType"/>
-                    <property name="responseTimeout"/>
-                    <property name="connector-ref" value="soitoolkit-jms-connector"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/jms/transaction;0">
-                        <property name="action" value="ALWAYS_JOIN"/>
-                        <property name="isProcessed$$$$" value="true"/>
-                        <property name="auxiliary;index" value="8"/>
-                        <property name="auxiliary;wrapIn" value="8"/>
-                    </property-collection>
-                </properties>
-            </endpoint>
-            <unknown description="false" index="9" entity-id="unknown#1">
-                <graphicalData x="737" y="196" width="162" height="61"/>
+            <unknown description="false" index="4" entity-id="unknown#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
                 <content>&lt;custom-exception-strategy xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; class=&quot;org.soitoolkit.commons.mule.error.ServiceExceptionStrategy&quot;/&gt;</content>
             </unknown>
         </lane>
