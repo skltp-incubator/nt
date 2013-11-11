@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="receive-service">
-    <flow SubFlow="false" name="receive-service" entity-id="5829f127-5f3b-481a-98d1-589a22e4990c">
+    <flow SubFlow="false" name="receive-service" entity-id="13c61c39-2f57-46e6-82d0-468c9234aea8">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -59,11 +59,29 @@
                     <property name="auxiliary;index" value="3"/>
                 </properties>
             </pattern>
+            <pattern name="SaveMessage" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="variableName" value="savedMessage"/>
+                    <property name="value" value="#[payload]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="4"/>
+                </properties>
+            </pattern>
             <pattern name="Java" type="http://www.mulesoft.org/schema/mule/core/component" entity-id="Java#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="class" value="se.skltp.nt.intsvc.ReceiveNotificationImpl"/>
-                    <property name="auxiliary;index" value="4"/>
+                    <property name="auxiliary;index" value="5"/>
+                </properties>
+            </pattern>
+            <pattern name="SaveResponse" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="variableName" value="savedResponse"/>
+                    <property name="value" value="#[payload]"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
+                    <property name="auxiliary;index" value="6"/>
                 </properties>
             </pattern>
             <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
@@ -72,7 +90,25 @@
                     <property name="message" value="Before queue"/>
                     <property name="category"/>
                     <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="5"/>
+                    <property name="auxiliary;index" value="7"/>
+                </properties>
+            </pattern>
+            <pattern name="Set Payload to Message" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="value" value="#[variable:savedMessage]"/>
+                    <property name="auxiliary;index" value="8"/>
+                </properties>
+            </pattern>
+            <pattern name="Java" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="class" value="se.skltp.nt.intsvc.ReceiveNotificationToJmsMsgTransformer"/>
+                    <property name="auxiliary;index" value="9"/>
+                    <property name="mimeType"/>
                 </properties>
             </pattern>
             <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="JMS Topic" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
@@ -87,17 +123,24 @@
                     <property name="exchange-pattern"/>
                     <property name="tracking:enable-default-events"/>
                     <property name="ref"/>
-                    <property name="transformer-refs" value="objToStr logMsgOut"/>
+                    <property name="transformer-refs" value="logMsgOut"/>
                     <property name="address"/>
                     <property name="encoding"/>
                     <property name="responseTransformer-refs"/>
-                    <property name="auxiliary;index" value="6"/>
+                    <property name="auxiliary;index" value="10"/>
                     <property name="mimeType"/>
                     <property name="responseTimeout"/>
                     <property name="connector-ref" value="soitoolkit-jms-connector"/>
                 </properties>
             </endpoint>
-            <unknown description="false" index="7" entity-id="unknown#1">
+            <pattern name="Set Payload to response" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="value" value="#[variable:savedResponse]"/>
+                    <property name="auxiliary;index" value="11"/>
+                </properties>
+            </pattern>
+            <unknown description="false" index="12" entity-id="unknown#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <content>&lt;custom-exception-strategy xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; class=&quot;org.soitoolkit.commons.mule.error.ServiceExceptionStrategy&quot;/&gt;</content>
             </unknown>

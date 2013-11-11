@@ -34,6 +34,12 @@
 
 
 <% LOGICAL_ADDRESSES.each { LOGICAL_ADDRESS -> %>
+   <spring:beans>
+        <!-- Bean that changes the address of the request -->
+        <spring:bean name="change-address-bean-${LOGICAL_ADDRESS}" class="se.skltp.nt.intsvc.ChangeAddressBean">
+            <spring:property name="logicalAddress" value="${LOGICAL_ADDRESS}"/>
+        </spring:bean>
+    </spring:beans>
 
     <flow name="notify-service-${LOGICAL_ADDRESS}">
         <jms:inbound-endpoint 
@@ -44,8 +50,35 @@
             doc:name="JMS Topic">
         </jms:inbound-endpoint>
 
-        <logger message="Read one message for ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>
-                  
+        <logger message="Before: ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>
+              
+        <component>
+            <spring-object bean="change-address-bean-${LOGICAL_ADDRESS}"/>
+        </component>
+        
+         <logger message="After: ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>       
+        
+         <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+
+         <http:outbound-endpoint 
+            connector-ref="soitoolkit-http-connector"
+            address="${NOTIFY_OUTBOUND_URL}" 
+            exchange-pattern="request-response"
+            transformer-refs="logReqOut"
+            responseTransformer-refs="logRespIn">
+
+            <cxf:jaxws-client 
+                port="ReceiveNotificationResponderPort" 
+                operation="ReceiveNotification" 
+                clientClass="se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderService"
+                wsdlLocation="classpath:/schemas/interactions/ReceiveNotificationInteraction/ReceiveNotificationInteraction_1.0_RIVTABP21.wsdl"
+            />
+
+<!--
+            <jms:transaction action="ALWAYS_JOIN"/>
+-->
+         </http:outbound-endpoint>
+               
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
     </flow>
 <% } %>

@@ -11,7 +11,9 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+
 	<flow name="receive-service" doc:name="receive-service">
+
 		<http:inbound-endpoint exchange-pattern="request-response"
 			address="${RECEIVE-SERVICE_INBOUND_URL}"
 			connector-ref="soitoolkit-http-connector"
@@ -22,18 +24,27 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 		<cxf:jaxws-service
 			serviceClass="se.skltp.nt.intsvc.ReceiveNotificationImpl"
 			doc:name="SOAP" />
-			
+        <set-variable variableName="savedMessage" value="#[payload]" doc:name="SaveMessage"/>
+						
         <component class="se.skltp.nt.intsvc.ReceiveNotificationImpl" doc:name="Java"/>
+        <set-variable variableName="savedResponse" value="#[payload]" doc:name="SaveResponse"/>
+        
         <logger message="Before queue" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[variable:savedMessage]" doc:name="Set Payload to Message"/>
 
+        <custom-transformer class="se.skltp.nt.intsvc.ReceiveNotificationToJmsMsgTransformer" doc:name="Java"/>
+        
         <jms:outbound-endpoint 
             connector-ref="soitoolkit-jms-connector"
             topic="${NOTIFY_TOPIC}"
-            transformer-refs="objToStr logMsgOut" 
+            transformer-refs="logMsgOut" 
             doc:name="JMS Topic">
         </jms:outbound-endpoint>
+        
+        <set-payload value="#[variable:savedResponse]" doc:name="Set Payload to response"/>
         
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
 
 	</flow>
+
 </mule>
