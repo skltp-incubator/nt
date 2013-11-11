@@ -3,7 +3,7 @@
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
  distributed with this work for additional information
- regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ regarding copyright ownership. Inera licenses this file
  to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
  with the License. You may obtain a copy of the License at
@@ -17,22 +17,22 @@
  specific language governing permissions and limitations
  under the License.
  -->		
-<wsdl:definitions name='ReceiveNotificationInteraction' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tjsr='urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1' xmlns:tjsi='urn:riv:infrastructure:itintegration:notification:ReceiveNotificationInitiator:1' xmlns:tns='urn:riv:infrastructure:itintegration:notification:ReceiveNotification:1:rivtabp21' targetNamespace='urn:riv:infrastructure:itintegration:notification:ReceiveNotification:1:rivtabp21' xmlns:itr='urn:riv:itintegration:registry:1'>
+<wsdl:definitions name='ReceiveNotificationInteraction' xmlns:wsdl='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tjsr='urn:riv:itintegration:notification:ReceiveNotificationResponder:1' xmlns:tjsi='urn:riv:itintegration:notification:ReceiveNotificationInitiator:1' xmlns:tns='urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21' targetNamespace='urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21' xmlns:itr='urn:riv:itintegration:registry:1'>
   <xs:annotation>
     <xs:documentation>
 			 Tjänsteinteraktionens namn: ReceiveNotificationInteraction
 			 Beskrivning: 
-			   Receive generic event notifications
+			   Generic notification contract
 			 Revisioner: 
-			 Tjänstedomän: infrastructure:itintegration:notification
+			 Tjänstedomän: itintegration:notification
 			 Tjänsteinteraktionstyp: Fråga-Svar
 			 WS-profil: RIVTABP21
-			 Förvaltas av: Sveriges Kommuner och Landsting
+			 Förvaltas av: Inera
 			 </xs:documentation>
   </xs:annotation>
   <wsdl:types>
-    <xs:schema targetNamespace='urn:riv:infrastructure:itintegration:notification:ReceiveNotification:1:rivtabp21'>
-      <xs:import schemaLocation='ReceiveNotificationResponder_1.0.xsd' namespace='urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1' />
+    <xs:schema targetNamespace='urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21'>
+      <xs:import schemaLocation='ReceiveNotificationResponder_1.0.xsd' namespace='urn:riv:itintegration:notification:ReceiveNotificationResponder:1' />
       <xs:import schemaLocation='../../core_components/itintegration_registry_1.0.xsd' namespace='urn:riv:itintegration:registry:1' />
     </xs:schema>
   </wsdl:types>
@@ -54,7 +54,7 @@
   <wsdl:binding name='ReceiveNotificationResponderBinding' type='tns:ReceiveNotificationResponderInterface'>
     <soap:binding style='document' transport='http://schemas.xmlsoap.org/soap/http' />
     <wsdl:operation name='ReceiveNotification'>
-      <soap:operation soapAction='urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1:ReceiveNotification' style='document' />
+      <soap:operation soapAction='urn:riv:itintegration:notification:ReceiveNotificationResponder:1:ReceiveNotification' style='document' />
       <wsdl:input>
         <soap:header use='literal' message='tns:ReceiveNotificationRequest' part='LogicalAddress' />
         <soap:body use='literal' parts='parameters' />

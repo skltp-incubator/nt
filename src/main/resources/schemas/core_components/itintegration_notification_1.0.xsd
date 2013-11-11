@@ -3,7 +3,7 @@
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements. See the NOTICE file
  distributed with this work for additional information
- regarding copyright ownership. Sveriges Kommuner och Landsting licenses this file
+ regarding copyright ownership. Inera licenses this file
  to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
  with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@
  specific language governing permissions and limitations
  under the License.
  -->		
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:infrastructure:itintegration:notification:1' targetNamespace='urn:riv:infrastructure:itintegration:notification:1' elementFormDefault='qualified' attributeFormDefault='unqualified' version='1.0'>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:itintegration:notification:1' targetNamespace='urn:riv:itintegration:notification:1' elementFormDefault='qualified' attributeFormDefault='unqualified' version='1.0'>
   <xs:complexType name='SomeElementType'>
     <xs:sequence>
       <xs:element name='SomeElement' type='xs:string' />

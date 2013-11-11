@@ -117,12 +117,12 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                                         Note: be careful when changing this - must be in sync for all
                                         schemas generations in this namespace!
                                         <extraarg>
-                                            urn:riv:infrastructure:itintegration:notification:ReceiveNotification:1:rivtabp21=se.riv.infrastructure.itintegration.notification.ReceiveNotification.v1
+                                            urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21=se.riv.itintegration.notification.ReceiveNotification.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:infrastructure:itintegration:notification:1=se.riv.infrastructure.itintegration.notification.v1
+                                            urn:riv:itintegration:notification:1=se.riv.itintegration.notification.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
@@ -132,7 +132,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>                                                           
-                                            urn:riv:infrastructure:itintegration:notification:ReceiveNotificationResponder:1=se.riv.infrastructure.itintegration.notification.ReceiveNotificationResponder.v1
+                                            urn:riv:itintegration:notification:ReceiveNotificationResponder:1=se.riv.itintegration.notification.ReceiveNotificationResponder.v1
                                         </extraarg>
                                     </extraargs>
                                     <wsdl>

@@ -22,6 +22,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 		<cxf:jaxws-service
 			serviceClass="se.skltp.nt.intsvc.ReceiveNotificationImpl"
 			doc:name="SOAP" />
+        <component class="se.skltp.nt.intsvc.ReceiveNotificationImpl" doc:name="Java"/>
 
 <!-- 
 		<jms:outbound-endpoint 
