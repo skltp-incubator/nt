@@ -44,8 +44,8 @@
             doc:name="JMS Topic">
         </jms:inbound-endpoint>
 
-        <logger level="INFO" doc:name="Logger"/>
-          
+        <logger message="Read one message for ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>
+                  
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
     </flow>
 <% } %>

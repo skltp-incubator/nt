@@ -22,18 +22,18 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 		<cxf:jaxws-service
 			serviceClass="se.skltp.nt.intsvc.ReceiveNotificationImpl"
 			doc:name="SOAP" />
+			
         <component class="se.skltp.nt.intsvc.ReceiveNotificationImpl" doc:name="Java"/>
+        <logger message="Before queue" level="INFO" doc:name="Logger"/>
 
-<!-- 
-		<jms:outbound-endpoint 
-			connector-ref="soitoolkit-jms-connector"
-		    topic="NotificationTopic"
-		    transformer-refs="objToStr logMsgOut" 
-			doc:name="JMS">
-		</jms:outbound-endpoint>
- -->    
-		
-		<custom-exception-strategy
-			class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"></custom-exception-strategy>
+        <jms:outbound-endpoint 
+            connector-ref="soitoolkit-jms-connector"
+            topic="${NOTIFY_TOPIC}"
+            transformer-refs="objToStr logMsgOut" 
+            doc:name="JMS Topic">
+        </jms:outbound-endpoint>
+        
+        <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
+
 	</flow>
 </mule>

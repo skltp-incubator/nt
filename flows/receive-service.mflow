@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="receive-service">
-    <flow SubFlow="false" name="receive-service" entity-id="f2b9e29f-a178-462c-a771-0ea29dc719f5">
+    <flow SubFlow="false" name="receive-service" entity-id="5829f127-5f3b-481a-98d1-589a22e4990c">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -12,7 +12,7 @@
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
             <graphicalData x="0" y="0" width="0" height="0"/>
             <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="HTTP" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
-                <graphicalData x="19" y="242" width="68" height="169"/>
+                <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="port"/>
                     <property name="host"/>
@@ -41,80 +41,64 @@
                 </properties>
             </endpoint>
             <pattern name="SOAP" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#1">
-                <graphicalData x="147" y="242" width="68" height="169"/>
-                <properties>
-                    <property name="port" value=""/>
-                    <property name="wsdlLocation" value=""/>
-                    <property name="serviceClass" value="se.skltp.nt.intsvc.ReceiveNotificationImpl"/>
-                    <property name="DATABINDING" value=""/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/cxf/jaxws-service"/>
-                    <property name="class" value=""/>
-                    <property name="configuration-ref" value=""/>
-                    <property name="namespace" value=""/>
-                    <property name="auxiliary;erased;DATABINDING" value="true"/>
-                    <property name="validationEnabled" value="false"/>
-                    <property name="updated"/>
-                    <property name="bindingId" value=""/>
-                    <property name="service" value=""/>
-                    <property name="mtomEnabled" value="false"/>
-                    <property name="soapVersion" value="1.1"/>
-                    <property name="enableMuleSoapHeaders" value="true"/>
-                    <property name="propertiesLabel" value=""/>
-                    <property name="auxiliary;index" value="3"/>
-                    <property-collection name="">
-                        <property name="auxiliary;erased;DATABINDING" value="true"/>
-                        <property name="DATABINDING" value=""/>
-                        <property name="class" value=""/>
-                        <property name="propertiesLabel" value=""/>
-                    </property-collection>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/schemaLocations;1607181241">
-                        <property name="isProcessed$$$$" value="true"/>
-                    </property-collection>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/ws-security-full;367571259">
-                        <property name="isProcessed$$$$" value="true"/>
-                        <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/ws-config;1138040611">
-                            <property name="isProcessed$$$$" value="true"/>
-                        </property-collection>
-                        <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/ws-custom-validator;1677172483">
-                            <property name="isProcessed$$$$" value="true"/>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/bst-token-validator;414212630">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/saml1-token-validator;1692297571">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/saml2-token-validator;1171854929">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/signature-token-validator;827483686">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/timestamp-token-validator;793265066">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                            <property-collection name="@http://www.mulesoft.org/schema/mule/cxf/username-token-validator;1559188895">
-<property name="isProcessed$$$$" value="true"/>
-                            </property-collection>
-                        </property-collection>
-                    </property-collection>
-                </properties>
-                <description></description>
-            </pattern>
-            <pattern name="Java" type="http://www.mulesoft.org/schema/mule/core/component" entity-id="e5fb2f33-9354-41a0-aa27-92bbadb37445">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
-                    <property name="ref" value=""/>
-                    <property name="updated"/>
-                    <property name="class" value="se.skltp.nt.intsvc.ReceiveNotificationImpl"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/core/refInterceptorStackType;723170102">
-                        <property name="ref" value=""/>
-                        <property name="isProcessed$$$$" value="true"/>
-                    </property-collection>
+                    <property name="port"/>
+                    <property name="wsdlLocation"/>
+                    <property name="serviceClass" value="se.skltp.nt.intsvc.ReceiveNotificationImpl"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/cxf/jaxws-service"/>
+                    <property name="configuration-ref"/>
+                    <property name="namespace"/>
+                    <property name="validationEnabled"/>
+                    <property name="bindingId"/>
+                    <property name="onException"/>
+                    <property name="service"/>
+                    <property name="mtomEnabled"/>
+                    <property name="soapVersion"/>
+                    <property name="enableMuleSoapHeaders"/>
+                    <property name="auxiliary;index" value="3"/>
                 </properties>
-                <description></description>
             </pattern>
-            <unknown description="false" index="4" entity-id="unknown#1">
-                <graphicalData x="275" y="245" width="162" height="61"/>
+            <pattern name="Java" type="http://www.mulesoft.org/schema/mule/core/component" entity-id="Java#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="class" value="se.skltp.nt.intsvc.ReceiveNotificationImpl"/>
+                    <property name="auxiliary;index" value="4"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="Before queue"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="5"/>
+                </properties>
+            </pattern>
+            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="JMS Topic" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="topic" value="${NOTIFY_TOPIC}"/>
+                    <property name="queue"/>
+                    <property name="durableName"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="disableTemporaryReplyToDestinations"/>
+                    <property name="exchange-pattern"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs" value="objToStr logMsgOut"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="auxiliary;index" value="6"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="connector-ref" value="soitoolkit-jms-connector"/>
+                </properties>
+            </endpoint>
+            <unknown description="false" index="7" entity-id="unknown#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
                 <content>&lt;custom-exception-strategy xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; class=&quot;org.soitoolkit.commons.mule.error.ServiceExceptionStrategy&quot;/&gt;</content>
             </unknown>
         </lane>
