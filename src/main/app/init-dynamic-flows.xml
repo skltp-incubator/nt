@@ -2,5 +2,7 @@
 
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
-    <simple-service name="mySample-teststub-service" address="${MYSAMPLE_TESTSTUB_INBOUND_URL}?connector=soitoolkit-http-connector" component-class="se.skltp.nt.mysample.MySampleTestProducer" type="jax-ws"></simple-service>
+    <spring:beans>
+        <spring:bean id="initializer" class="se.skltp.ei.intsvc.dynamicFlows.Initializer"/>
+    </spring:beans>
 </mule>

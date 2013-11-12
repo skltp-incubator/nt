@@ -23,7 +23,7 @@ public class ReceiveNotificationImpl implements ReceiveNotificationResponderInte
     @Override
     public ReceiveNotificationResponseType receiveNotification(@WebParam(partName = "LogicalAddress", name = "LogicalAddress", targetNamespace = "urn:riv:itintegration:registry:1", header = true) String logicalAddress, @WebParam(partName = "parameters", name = "ReceiveNotification", targetNamespace = "urn:riv:itintegration:notification:ReceiveNotificationResponder:1") ReceiveNotificationType parameters) {
         ReceiveNotificationResponseType response = new ReceiveNotificationResponseType();
-
+        // could do validation here ... but right now, we just create the response here.
         response.setResultCode(ResultCodeEnum.OK);
         return response;
     }

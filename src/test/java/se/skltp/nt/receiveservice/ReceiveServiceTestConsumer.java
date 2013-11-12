@@ -2,16 +2,15 @@ package se.skltp.nt.receiveservice;
 
 import static se.skltp.nt.NtMuleServer.getAddress;
 
-import java.net.URL;
-import org.apache.cxf.bus.spring.SpringBusFactory;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
-import org.soitoolkit.refapps.sd.sample.schema.v1.Sample;
-import org.soitoolkit.refapps.sd.sample.schema.v1.SampleResponse;
-import org.soitoolkit.refapps.sd.sample.wsdl.v1.Fault;
-import org.soitoolkit.refapps.sd.sample.wsdl.v1.SampleInterface;
+
+import se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderInterface;
+import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
+import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.skltp.nt.intsvc.ReceiveNotificationImpl;
 
 public class ReceiveServiceTestConsumer {
 
@@ -19,37 +18,39 @@ public class ReceiveServiceTestConsumer {
 
 	private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
 
-	private SampleInterface _service = null;
+	private ReceiveNotificationResponderInterface _service = null;
 	    
     public ReceiveServiceTestConsumer(String serviceAddress) {
 		JaxWsProxyFactoryBean proxyFactory = new JaxWsProxyFactoryBean();
-		proxyFactory.setServiceClass(SampleInterface.class);
+		proxyFactory.setServiceClass(ReceiveNotificationResponderInterface.class);
 		proxyFactory.setAddress(serviceAddress);
 		
+		/*
 		//Used for HTTPS
 		SpringBusFactory bf = new SpringBusFactory();
 		URL cxfConfig = ReceiveServiceTestConsumer.class.getClassLoader().getResource("cxf-test-consumer-config.xml");
 		if (cxfConfig != null) {
 			proxyFactory.setBus(bf.createBus(cxfConfig));
 		}
+		*/
 		
-		_service  = (SampleInterface) proxyFactory.create(); 
+		_service  = (ReceiveNotificationResponderInterface) proxyFactory.create(); 
     }
 
-    public static void main(String[] args) throws Fault {
+    public static void main(String[] args) throws Exception {
             String serviceAddress = getAddress("RECEIVE-SERVICE_INBOUND_URL");
-            String personnummer = "1234567890";
 
             ReceiveServiceTestConsumer consumer = new ReceiveServiceTestConsumer(serviceAddress);
-            SampleResponse response = consumer.callService(personnummer);
-            log.info("Returned value = " + response.getValue());
+            ReceiveNotificationResponseType response = consumer.callService("Foo-1", "subj-1", "cat-1");
+            log.info("Returned value = " + response.getResultCode());
     }
 
-    public SampleResponse callService(String id) throws Fault {
-            log.debug("Calling sample-soap-service with id = {}", id);
-            Sample request = new Sample();
-            request.setId(id);
-            return _service.sample(request);
+    public ReceiveNotificationResponseType callService(String logicalAddress, String subject, String category) {
+            log.debug("Calling receive-notification-soap-service with addr=" + logicalAddress + ", subj=" + subject + ", cat=" + category);
+            ReceiveNotificationType request = new ReceiveNotificationType();
+            request.setSubject(subject);
+            request.setCategory(category);
+            return _service.receiveNotification(logicalAddress, request);
     }	
 	
 }

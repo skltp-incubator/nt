@@ -13,13 +13,10 @@
 		http://www.mulesoft.org/schema/mule/jms     http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
 	">
 
-	<!-- TODO: Add teststub-service specific definitions here -->
-
-
 	<simple-service 
-		name="receive-service-teststub-service"
-        address="${RECEIVE-SERVICE_TESTSTUB_INBOUND_URL}?connector=soitoolkit-http-connector" 
-        component-class="se.skltp.nt.receiveservice.ReceiveServiceTestProducer"
+		name="receive-notification-teststub-service"
+        address="${NOTIFY_TESTSTUB_URL}?connector=soitoolkit-http-connector" 
+        component-class="se.skltp.nt.intsvc.ReceiveNotificationTestProducer"
         type="jax-ws" />
  
 </mule>
