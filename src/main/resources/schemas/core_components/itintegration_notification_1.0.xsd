@@ -16,12 +16,16 @@
  KIND, either express or implied. See the License for the
  specific language governing permissions and limitations
  under the License.
- -->		
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:tns='urn:riv:itintegration:notification:1' targetNamespace='urn:riv:itintegration:notification:1' elementFormDefault='qualified' attributeFormDefault='unqualified' version='1.0'>
-  <xs:complexType name='SomeElementType'>
-    <xs:sequence>
-      <xs:element name='SomeElement' type='xs:string' />
-      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
-    </xs:sequence>
-  </xs:complexType>
+ -->
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+           targetNamespace='urn:riv:itintegration:notification:1'
+           elementFormDefault='qualified'
+           attributeFormDefault='unqualified'
+           version='1.0'>
+    <xs:complexType name='Filter'>
+        <xs:sequence>
+            <xs:element name='serviceDomain' type='xs:string' minOccurs="1" maxOccurs="1"/>
+            <xs:element name='categorization' type='xs:string' minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
