@@ -19,16 +19,11 @@
  */
 package se.skltp.nt.intsvc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
@@ -47,9 +42,10 @@ import org.soitoolkit.commons.mule.test.DispatcherMuleClientImpl;
 import org.soitoolkit.commons.mule.util.MuleUtil;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import org.soitoolkit.commons.mule.util.ValueHolder;
-
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ObjectFactory;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+
+import static org.junit.Assert.*;
 
 /**
  * Extends the base class in Mule, org.mule.tck.junit4.FuntionalTestCase.
@@ -205,7 +201,8 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
 	 * 
 	 * Sample usage: TBS
 	 * 
-	 * @param serviceComponentName
+     * @param outboundEndpointName
+     * @param action
 	 * @param timeout in ms
 	 * @return the MuleMessage sent to the named service component
 	 */
@@ -245,20 +242,16 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
 		return dispatchAndWaitForDelivery(new DispatcherMuleClientImpl(muleContext, inboundEndpointAddress, payload, headers), outboundEndpointName, action, timeout);
     }
 
-	
-	/**
-	 * Use the Dispatcher to send a asynchronous message and waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code> and with the action <code>action</code>. 
-	 * 
-	 * Sample usage: TBS
-	 * 
-	 * @param inboundEndpointAddress
-	 * @param payload
-	 * @param headers
-	 * @param outboundEndpointName
-	 * @param action as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
-	 * @param timeout in ms
-	 * @return the received MuleMEssage on the outboundEndpoint
-	 */
+
+    /**
+     * Use the Dispatcher to send a asynchronous message and waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code> and with the action <code>action</code>.
+     *
+     * @param dispatcher
+     * @param outboundEndpointName
+     * @param action as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
+   	 * @param timeout in ms
+   	 * @return the received MuleMEssage on the outboundEndpoint
+     */
 	@SuppressWarnings("rawtypes")
 	protected MuleMessage dispatchAndWaitForDelivery(Dispatcher dispatcher, final String outboundEndpointName, final int action, long timeout) {
 		

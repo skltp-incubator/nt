@@ -73,6 +73,14 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
             <artifactId>soitoolkit-refapps-sample-schemas</artifactId>
             <version>${soitoolkit.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+			<scope>test</scope>
+            <version>1.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
