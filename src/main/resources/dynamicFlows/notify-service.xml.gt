@@ -74,7 +74,7 @@
 
         <http:outbound-endpoint exchange-pattern="request-response"
             doc:name="HTTP" method="POST"
-            host="localhost" port="8088" path="#[NT_VP_URL]">
+            host="localhost" port="8083" path="#[NT_VP_URL]">
             <jms:transaction action="ALWAYS_JOIN"/>
         </http:outbound-endpoint>
 

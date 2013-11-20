@@ -47,7 +47,7 @@ public class NtPayloadToXmlStreamTransformer extends AbstractMessageTransformer 
 
             // String baseVpUrl = message.getProperty("NT_VP_BASE_URL", PropertyScope.SESSION);
 
-            String baseVpUrl = "mockService";
+            String baseVpUrl = "nt-services";
             String url = baseVpUrl + payload.getTrailingPartOfVpUrl();
             message.setProperty("NT_VP_URL", url, PropertyScope.INVOCATION);
             message.setProperty("NT_RIVTA_VERSION", payload.getRivtaVersion(), PropertyScope.INVOCATION);

@@ -107,7 +107,7 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
 		assertQueueDepth(ERROR_LOG_QUEUE, 0);
 
 		// Expect  info entries?
-		assertQueueDepth(INFO_LOG_QUEUE, 9);
+		assertQueueDepth(INFO_LOG_QUEUE, 5);
 		
 	    List<ReceiveData> receivedMessages = ReceiveNotificationTestProducer.getReceiveDataList();
 	    
