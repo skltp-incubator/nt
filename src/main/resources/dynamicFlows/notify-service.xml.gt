@@ -50,32 +50,35 @@
             doc:name="JMS Topic">
             <jms:transaction action="ALWAYS_BEGIN"/>
         </jms:inbound-endpoint>
-
-        <logger message="Before: ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>
-              
-        <component>
-            <spring-object bean="change-address-bean-${LOGICAL_ADDRESS}"/>
-        </component>
         
-         <logger message="After: ${LOGICAL_ADDRESS}:\n#[payload]" level="INFO" doc:name="Logger"/>       
+         <logger message="[${LOGICAL_ADDRESS}] From Queue: \n#[payload]" level="INFO" doc:name="Logger"/>
+         
+         <set-variable doc:name="setLogicalAddress" value="${LOGICAL_ADDRESS}" variableName="logicalAddress"/>
+         
+         <custom-transformer
+            class="se.skltp.nt.intsvc.NtPayloadToXmlStreamTransformer"
+             doc:name="Extract an NtPayload" />  
+                     
+        <message-properties-transformer doc:name="Message Properties">
+            <add-message-property key="SOAPAction" value="#[NT_SOAP_ACTION]"/>
+            <add-message-property key="Content-Type" value="#[NT_CONTENT_TYPE]"/>
+        </message-properties-transformer>
         
-         <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+        <cxf:proxy-client doc:name="SOAP" payload="envelope"/>
+        
+        <logger message="[${LOGICAL_ADDRESS}] Before Send: #[message.payload]" level="INFO" doc:name="Logger"/>
 
-         <http:outbound-endpoint 
-            connector-ref="soitoolkit-http-connector"
-            address="${NOTIFY_OUTBOUND_URL}" 
-            exchange-pattern="request-response"
-            transformer-refs="logReqOut"
-            responseTransformer-refs="logRespIn">
+        <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
 
-            <cxf:jaxws-client 
-                port="ReceiveNotificationResponderPort" 
-                operation="ReceiveNotification" 
-                clientClass="se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderService"
-                wsdlLocation="classpath:/schemas/interactions/ReceiveNotificationInteraction/ReceiveNotificationInteraction_1.0_RIVTABP21.wsdl"
-            />
+        <!-- TODO: should not need to use localhost here... -->
+
+        <http:outbound-endpoint exchange-pattern="request-response"
+            doc:name="HTTP" method="POST"
+            host="localhost" port="8088" path="#[NT_VP_URL]">
             <jms:transaction action="ALWAYS_JOIN"/>
-         </http:outbound-endpoint>
+        </http:outbound-endpoint>
+
+        <logger message="[${LOGICAL_ADDRESS}] After Send: #[message.payload]" level="INFO" doc:name="Logger"/>
                
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
     </flow>

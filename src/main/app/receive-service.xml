@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
 	xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
@@ -10,7 +10,8 @@ http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
 
 	<flow name="receive-service" doc:name="receive-service">
 
@@ -20,19 +21,33 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 			transformer-refs="logReqIn" 
 			responseTransformer-refs="createSoapFaultIfException logRespOut"
 			doc:name="HTTP" />
+        <response>
+            <logger message="5 #[message.payload]"  level="INFO" doc:name="Logger"/>
+        </response>
 			
-		<cxf:jaxws-service
-			serviceClass="se.skltp.nt.intsvc.ReceiveNotificationImpl"
-			doc:name="SOAP" />
-        <set-variable variableName="savedMessage" value="#[payload]" doc:name="SaveMessage"/>
-						
-        <component class="se.skltp.nt.intsvc.ReceiveNotificationImpl" doc:name="Java"/>
-        <set-variable variableName="savedResponse" value="#[payload]" doc:name="SaveResponse"/>
+        <cxf:proxy-service doc:name="Convert to XMLStreamReader for envelope"
+            payload="envelope" />
+        <response>
+            <logger message="4 #[message.payload]" level="INFO" doc:name="Logger"/>
+        </response>
         
-        <logger message="Before queue" level="INFO" doc:name="Logger"/>
-        <set-payload value="#[variable:savedMessage]" doc:name="Set Payload to Message"/>
-
-        <custom-transformer class="se.skltp.nt.intsvc.ReceiveNotificationToJmsMsgTransformer" doc:name="Java"/>
+        <response>
+            <set-payload value="#[savedResponse]" doc:name="Set Payload"/>
+        </response>
+   
+        <custom-transformer
+            class="se.skltp.nt.intsvc.ServiceContractAndRivtaVersionExtractor"
+             doc:name="Extract rivtaVersion and service contract" />
+             
+        <response>
+            <logger message="3 #[message.payload]"  level="INFO" doc:name="Logger"/>
+        </response>
+             
+        <cxf:proxy-service doc:name="Strip header" payload="body"/>
+        
+        <custom-transformer
+            class="se.skltp.nt.intsvc.SoapBodyToNtPayloadTransformer"
+             doc:name="Create an NtPayload" />      
         
         <jms:outbound-endpoint 
             connector-ref="soitoolkit-jms-connector"
@@ -41,7 +56,15 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
             doc:name="JMS Topic">
         </jms:outbound-endpoint>
         
-        <set-payload value="#[variable:savedResponse]" doc:name="Set Payload to response"/>
+     
+        <set-payload
+            value='&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:org.soitoolkit.refapps.sd.sample.schema:v1">&lt;soapenv:Header/>&lt;soapenv:Body/>&lt;/soapenv:Envelope>'
+             doc:name="Set response to SOAP-message text"/>
+        <logger message="1 #[message.payload]" level="INFO" doc:name="Logger"/>
+        <custom-transformer  class="org.mule.module.xml.transformer.XmlToXMLStreamReader" doc:name="Java"/>
+        <set-variable variableName="savedResponse" value="#[message.payload]" doc:name="saveResponse"/>
+        <logger message="2 #[message.payload]" level="INFO" doc:name="Logger"/>
+        
         
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
 

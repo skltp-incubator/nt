@@ -19,13 +19,9 @@
  */
 package se.skltp.nt.intsvc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -36,12 +32,14 @@ import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.test.Dispatcher;
-
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ResultCodeEnum;
 import se.skltp.nt.NtMuleServer;
 import se.skltp.nt.intsvc.ReceiveNotificationTestProducer.ReceiveData;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class EndToEndIntegrationTest extends AbstractTestCase implements MessageListener {
@@ -153,8 +151,7 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
 
 			ReceiveNotificationResponseType response = consumer.callService(logicalAddress, request);
 	        
-			// Assert OK response from the web service
-	        assertEquals(ResultCodeEnum.OK, response.getResultCode());
+			// response (should be) empty
 		}
 	}
 }

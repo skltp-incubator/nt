@@ -55,7 +55,7 @@ import static org.junit.Assert.*;
  */
 public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.junit4.AbstractTestCase {
     
-	protected static final int EI_TEST_TIMEOUT   = 5000;
+	protected static final int EI_TEST_TIMEOUT   = 10000;
 	protected static final int EI_SHORT_WAITTIME =  500;
 
 	private static final JaxbUtil jabxUtil = new JaxbUtil( ReceiveNotificationType.class);

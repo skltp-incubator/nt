@@ -530,4 +530,9 @@ xmlns:urn1="urn:riv:itintegration:notification:ReceiveNotificationResponder:1">
          <!--You may enter ANY elements at this point-->
       </urn:ReceiveNotificationResponse>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:riv:itintegration:notification:ReceiveNotificationResponder:1:ReceiveNotification"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/><con:sensitiveInformation/></con:soapui-project>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:riv:itintegration:notification:ReceiveNotificationResponder:1:ReceiveNotification"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:mockService port="8088" path="/mock/*" host="Matso-MacBook.local" name="GenericReceiverService" bindToHostOnly="false" docroot=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:mockOperation name="sample" interface="sampleBinding" operation="sample"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:org.soitoolkit.refapps.sd.sample.schema:v1">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+   Ok
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="urn:org.soitoolkit.refapps.sd.sample.sample.wsdl:v1:sample"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/><con:sensitiveInformation/></con:soapui-project>
