@@ -34,7 +34,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.context.notification.EndpointMessageNotificationListener;
 import org.mule.api.context.notification.ServerNotification;
 import org.mule.context.notification.EndpointMessageNotification;
-import org.soitoolkit.commons.mule.jaxb.JaxbUtil;
 import org.soitoolkit.commons.mule.test.AbstractJmsTestUtil;
 import org.soitoolkit.commons.mule.test.ActiveMqJmsTestUtil;
 import org.soitoolkit.commons.mule.test.Dispatcher;
@@ -42,7 +41,7 @@ import org.soitoolkit.commons.mule.test.DispatcherMuleClientImpl;
 import org.soitoolkit.commons.mule.util.MuleUtil;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import org.soitoolkit.commons.mule.util.ValueHolder;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ObjectFactory;
+import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
 
 import static org.junit.Assert.*;
@@ -57,9 +56,6 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
     
 	protected static final int EI_TEST_TIMEOUT   = 10000;
 	protected static final int EI_SHORT_WAITTIME =  500;
-
-	private static final JaxbUtil jabxUtil = new JaxbUtil( ReceiveNotificationType.class);
-	private static final ObjectFactory receiveNotification_of = new ObjectFactory();
 
     protected static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
 	protected static final String INFO_LOG_QUEUE  = rb.getString("SOITOOLKIT_LOG_INFO_QUEUE");
@@ -137,12 +133,7 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
 			throw new RuntimeException(e);
 		}
 	}
-	
 
-	protected void assertReceiveNotificationRequest(ReceiveNotificationType expected, MuleMessage actual) {
-		String expectedXml = jabxUtil.marshal(receiveNotification_of.createReceiveNotification(expected));
-		assertRequest(expectedXml, actual);
-	}
 
 	protected void assertRequest(String expectedXml, MuleMessage actual) {
 		TextMessage actualJms = (TextMessage)actual.getPayload();
@@ -188,6 +179,11 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
 		request.setCategory(category);
 		
 		return request;
+    }
+
+    protected ProcessNotificationType createProcessNotificationRequest() {
+
+        return new ProcessNotificationType();
     }
 	
 	protected void waitForBackgroundProcessing() {

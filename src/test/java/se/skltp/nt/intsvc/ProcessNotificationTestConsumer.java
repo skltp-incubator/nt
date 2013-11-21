@@ -21,31 +21,30 @@ package se.skltp.nt.intsvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderInterface;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.riv.itintegration.engagementindex.ProcessNotification.v1.ProcessNotificationResponderInterface;
+import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationResponseType;
+import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
 import se.skltp.nt.NtMuleServer;
 
-public class NotificationTestConsumer extends AbstractTestConsumer<ReceiveNotificationResponderInterface> {
+public class ProcessNotificationTestConsumer extends AbstractTestConsumer<ProcessNotificationResponderInterface> {
 
-	private static final Logger log = LoggerFactory.getLogger(NotificationTestConsumer.class);
+	private static final Logger log = LoggerFactory.getLogger(ProcessNotificationTestConsumer.class);
 
 	public static void main(String[] args) {
-		String serviceAddress = NtMuleServer.getAddress("UPDATE_WEB_SERVICE_URL");
-		
-		NotificationTestConsumer consumer = new NotificationTestConsumer(serviceAddress);
+		String serviceAddress = NtMuleServer.getAddress("PROCESS_NOTIFICATION_WEB_SERVICE_URL");
 
-		ReceiveNotificationType request = new ReceiveNotificationType();
-		ReceiveNotificationResponseType response = consumer.callService("logical-adress", request);
-        
+		ProcessNotificationTestConsumer consumer = new ProcessNotificationTestConsumer(serviceAddress);
+
+		ProcessNotificationType request = new ProcessNotificationType();
+		ProcessNotificationResponseType response = consumer.callService("logical-adress", request);
+
 		log.info("Returned status = " + response.getResultCode());
 	}
 
-	public NotificationTestConsumer(String serviceAddress) {
+	public ProcessNotificationTestConsumer(String serviceAddress) {
 	    
 		// Setup a web service proxy for communication using HTTPS with Mutual Authentication
-		super(ReceiveNotificationResponderInterface.class, serviceAddress);
+		super(ProcessNotificationResponderInterface.class, serviceAddress);
 
 		if (serviceAddress == null) {
 			throw new RuntimeException("Null address");
@@ -53,11 +52,11 @@ public class NotificationTestConsumer extends AbstractTestConsumer<ReceiveNotifi
 
 	}
 
-	public ReceiveNotificationResponseType callService(String logicalAddress, ReceiveNotificationType request) {
+	public ProcessNotificationResponseType callService(String logicalAddress, ProcessNotificationType request) {
 
-		log.debug("Calling ReceiveNotification-soap-service ");
+		log.debug("Calling ProcessNotification-soap-service ");
 
-		ReceiveNotificationResponseType response = _service.receiveNotification(logicalAddress, request);
+		ProcessNotificationResponseType response = _service.processNotification(logicalAddress, request);
         return response;
 	}
 }

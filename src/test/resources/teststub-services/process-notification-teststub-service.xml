@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mule
+        xmlns="http://www.mulesoft.org/schema/mule/core"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core    http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<simple-service 
+		name="process-notification-teststub-service"
+        address="${PROCESS_TESTSTUB_URL}?connector=soitoolkit-http-connector"
+        component-class="se.skltp.nt.intsvc.ProcessNotificationTestProducer"
+        type="jax-ws" />
+ 
+</mule>

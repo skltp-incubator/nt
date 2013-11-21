@@ -24,7 +24,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
     <name>nt</name>
 
     <properties>
-        <schema.path>src/main/resources/schemas</schema.path>
+        <schema.path>src/test/resources/schemas</schema.path>
     </properties>
     <scm>
         <!-- TODO: Sample <scm>-tag, update to reflect you own environment! -->
@@ -139,12 +139,41 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
-                                        <extraarg>                                                           
+                                        <extraarg>
                                             urn:riv:itintegration:notification:ReceiveNotificationResponder:1=se.riv.itintegration.notification.ReceiveNotificationResponder.v1
                                         </extraarg>
                                     </extraargs>
                                     <wsdl>
                                         ${schema.path}/interactions/ReceiveNotificationInteraction/ReceiveNotificationInteraction_1.0_RIVTABP21.wsdl
+                                    </wsdl>
+                                </wsdlOption>
+
+                                <wsdlOption>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        Note: be careful when changing this - must be in sync for all
+                                        schemas generations in this namespace!
+                                        <extraarg>
+                                            urn:riv:itintegration:engagementindex:ProcessNotification:1:rivtabp21=se.riv.itintegration.engagementindex.ProcessNotification.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:engagementindex:1=se.riv.itintegration.engagementindex.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:engagementindex:ProcessNotificationResponder:1=se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1
+                                        </extraarg>
+                                    </extraargs>
+                                    <wsdl>
+                                        ${schema.path}/interactions/ProcessNotificationInteraction/ProcessNotificationInteraction_1.0_RIVTABP21.wsdl
                                     </wsdl>
                                 </wsdlOption>
 

@@ -95,6 +95,6 @@ public class ReceiveNotificationTestProducer implements ReceiveNotificationRespo
 		ReceiveNotificationType parameters;
 	}
 	
-	static final List<ReceiveData> receiveDataList = new ArrayList<ReceiveData>();
+	private static final List<ReceiveData> receiveDataList = new ArrayList<ReceiveData>();
 	
 }
