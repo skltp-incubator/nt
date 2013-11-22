@@ -23,23 +23,12 @@
   <xs:element name='ReceiveNotificationResponse' type='tns:ReceiveNotificationResponseType' />
   <xs:complexType name='ReceiveNotificationType'>
     <xs:sequence>
-      <xs:element name='subject' type='xs:string' />
-      <xs:element name='category' type='xs:string' />
+      <xs:element name='filter' type='core:Filter' />
       <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name='ReceiveNotificationResponseType'>
     <xs:sequence>
-      <xs:element name='ResultCode' type='tns:ResultCodeEnum' />
-      <xs:element name='comment' type='xs:string' minOccurs='0' />
-      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
     </xs:sequence>
   </xs:complexType>
-  <xs:simpleType name='ResultCodeEnum'>
-    <xs:restriction base='xs:string'>
-      <xs:enumeration value='OK' />
-      <xs:enumeration value='ERROR' />
-      <xs:enumeration value='INFO' />
-    </xs:restriction>
-  </xs:simpleType>
 </xs:schema>

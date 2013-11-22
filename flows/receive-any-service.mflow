@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="receive-service">
-    <flow SubFlow="false" name="receive-any-service" entity-id="bb677ed9-23d1-44e0-946a-32e8164e1f3f">
+    <flow SubFlow="false" name="receive-any-service" entity-id="9aa95842-ace2-43f2-bd1a-454862e307e0">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -28,7 +28,7 @@
                     <property name="ref"/>
                     <property name="transformer-refs" value="logReqIn"/>
                     <property name="httpLabel"/>
-                    <property name="address" value="${RECEIVE-SERVICE_INBOUND_URL}"/>
+                    <property name="address" value="${NT-SERVICES_INBOUND_URL}"/>
                     <property name="path"/>
                     <property name="encoding"/>
                     <property name="responseTransformer-refs" value="createSoapFaultIfException logRespOut"/>

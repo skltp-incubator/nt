@@ -19,28 +19,24 @@
  */
 package se.skltp.nt.intsvc;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.test.Dispatcher;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationResponseType;
 import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
 import se.skltp.nt.NtMuleServer;
 import se.skltp.nt.intsvc.ReceiveNotificationTestProducer.ReceiveData;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 public class EndToEndIntegrationTest extends AbstractTestCase implements MessageListener {
@@ -54,7 +50,8 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
 
     @SuppressWarnings("unused")
     private static final String EXPECTED_ERR_TIMEOUT_MSG = "Read timed out";
-    private static final String NOTIFICATION_SERVICE_ADDRESS = NtMuleServer.getAddress("RECEIVE-SERVICE_INBOUND_URL");
+    private static final String RECEIVE_ADDRESS = NtMuleServer.getAddress("NOTIFY_OUTBOUND_URL");
+    private static final String PROCESS_ADDRESS = NtMuleServer.getAddress("PROCESS_OUTBOUND_URL");
 
     private TextMessage receiveNotificationMessage = null;
 
@@ -94,30 +91,36 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
     @Test
     public void endToEnd_OK() {
 
-        String subject = "TheSubject";
-        String category = "TheCategory";
-
         final String logicalAddress = LOGICAL_ADDRESS;
 
-        final ReceiveNotificationType recRequest = createReceiveNotificationRequest(subject, category);
-        MuleMessage recNotMessage = dispatchAndWaitForServiceComponent(new Dispatcher() {
-            public void doDispatch() {
-                ReceiveNotificationResponseType response = new ReceiveNotificationTestConsumer(NOTIFICATION_SERVICE_ADDRESS).callService(logicalAddress, recRequest);
-            }
-        }, "receive-notification-teststub-service", EI_TEST_TIMEOUT);
+        // during testing, we can't rely on a VP to re-route to producers
+        CreatePropsAndConvertToStringTransformer.setEndpointPortOverride("8083");
 
         final ProcessNotificationType procRequest = createProcessNotificationRequest();
-        MuleMessage procNotMessage = dispatchAndWaitForServiceComponent(new Dispatcher() {
+        dispatchAndWaitForServiceComponent(new Dispatcher() {
             public void doDispatch() {
-                ProcessNotificationResponseType response = new ProcessNotificationTestConsumer(NOTIFICATION_SERVICE_ADDRESS).callService(logicalAddress, procRequest);
+                new ProcessNotificationTestConsumer(PROCESS_ADDRESS).callService(logicalAddress, procRequest);
             }
         }, "process-notification-teststub-service", EI_TEST_TIMEOUT);
 
-        ReceiveNotificationResponseType rnrt = (ReceiveNotificationResponseType) recNotMessage.getPayload();
-        assertEquals(se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ResultCodeEnum.OK, rnrt.getResultCode());
 
-        ProcessNotificationResponseType pnrt = (ProcessNotificationResponseType) procNotMessage.getPayload();
-        assertEquals(se.riv.itintegration.engagementindex.v1.ResultCodeEnum.OK, pnrt.getResultCode());
+        final ReceiveNotificationType[] requests = {
+                createReceiveNotificationRequest("domain-1", "category-1"),
+                createReceiveNotificationRequest("domain-1", "category-2"),
+                createReceiveNotificationRequest("domain-1", ""),
+                createReceiveNotificationRequest("domain-2", "category-1"),
+                createReceiveNotificationRequest("domain-2", "category-2"),
+                createReceiveNotificationRequest("domain-2", ""),
+                createReceiveNotificationRequest("", ""),
+        };
+
+        for ( final ReceiveNotificationType request : requests ) {
+            dispatchAndWaitForServiceComponent(new Dispatcher() {
+                public void doDispatch() {
+                    new ReceiveNotificationTestConsumer(RECEIVE_ADDRESS).callService(logicalAddress, request);
+                }
+            }, "receive-notification-teststub-service", EI_TEST_TIMEOUT);
+        }
 
         // Wait a short while for all background processing to complete
         waitForBackgroundProcessing();
@@ -126,34 +129,35 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
         assertQueueDepth(ERROR_LOG_QUEUE, 0);
 
         // Expect  info entries?
-        assertQueueDepth(INFO_LOG_QUEUE, 10);
+        assertQueueDepth(INFO_LOG_QUEUE, 48);
 
         List<ReceiveNotificationTestProducer.ReceiveData> recNotMessages = ReceiveNotificationTestProducer.getReceiveDataList();
 
-        Set<String> recAddresses = new HashSet<String>();
-        assertEquals(2, recNotMessages.size());
+        Map<String, Integer> recMsgCount = new HashMap<String, Integer>();
+        assertEquals(14, recNotMessages.size());
         for ( ReceiveData data : recNotMessages ) {
-            assertEquals(subject, data.parameters.getSubject());
-            assertEquals(category, data.parameters.getCategory());
-            recAddresses.add(data.logicalAddress);
+            Integer count = recMsgCount.get(data.logicalAddress);
+            count = (count == null ? 1 : count + 1);
+            recMsgCount.put(data.logicalAddress, count);
         }
-        assertEquals(2, recAddresses.size());
-        // should find FOO-x from config...
-        assertTrue(recAddresses.contains("FOO-1"));
-        assertTrue(recAddresses.contains("FOO-2"));
+        assertEquals(3, recMsgCount.size());
+        assertEquals(3, (int) recMsgCount.get("Foo-1")); // gets only domain-1, cat-1 -> 3
+        assertEquals(4, (int) recMsgCount.get("Foo-2")); // gets only domain-1, any cat -> 4
+        assertEquals(7, (int) recMsgCount.get("Foo-3")); // gets every message -> 7
 
         List<ProcessNotificationTestProducer.ReceiveData> procNotMessages = ProcessNotificationTestProducer.getReceiveDataList();
 
-        Set<String> addresses = new HashSet<String>();
-        assertEquals(2, procNotMessages.size());
+        Map<String, Integer> procMsgCount = new HashMap<String, Integer>();
+        assertEquals(3, procNotMessages.size());
         for ( ProcessNotificationTestProducer.ReceiveData data : procNotMessages ) {
-            addresses.add(data.logicalAddress);
+            Integer count = procMsgCount.get(data.logicalAddress);
+            count = (count == null ? 1 : count + 1);
+            procMsgCount.put(data.logicalAddress, count);
         }
-        assertEquals(2, addresses.size());
-        // should find FOO-x from config...
-        assertTrue(addresses.contains("FOO-1"));
-        assertTrue(addresses.contains("FOO-2"));
-
+        assertEquals(3, procMsgCount.size());
+        assertEquals(1, (int) procMsgCount.get("Foo-1"));
+        assertEquals(1, (int) procMsgCount.get("Foo-2"));
+        assertEquals(1, (int) procMsgCount.get("Foo-3"));
 
     }
 

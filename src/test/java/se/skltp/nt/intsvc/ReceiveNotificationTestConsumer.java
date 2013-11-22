@@ -38,8 +38,6 @@ public class ReceiveNotificationTestConsumer extends AbstractTestConsumer<Receiv
 
 		ReceiveNotificationType request = new ReceiveNotificationType();
 		ReceiveNotificationResponseType response = consumer.callService("logical-adress", request);
-        
-		log.info("Returned status = " + response.getResultCode());
 	}
 
 	public ReceiveNotificationTestConsumer(String serviceAddress) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" 
+<mule
+    xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
     xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
     xmlns:https="http://www.mulesoft.org/schema/mule/https"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
@@ -8,6 +9,7 @@
 	xmlns:spring="http://www.springframework.org/schema/beans"
     xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
 	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-current.xsd 
         http://www.mulesoft.org/schema/mule/cxf       http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
@@ -15,8 +17,8 @@
         http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd 
         http://www.mulesoft.org/schema/mule/core      http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
         http://www.mulesoft.org/schema/mule/https     http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd 
-        http://www.mulesoft.org/schema/mule/http      http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-
+        http://www.mulesoft.org/schema/mule/http      http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/xml       http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
 <% if (LOGICAL_ADDRESSES.size() > 0) { %>
     <!-- JMS Connector for the durable topic subscribers -->
     <jms:connector
@@ -34,10 +36,8 @@
 
 
 <% LOGICAL_ADDRESSES.each { LOGICAL_ADDRESS -> %>
-   <spring:beans>
-        <!-- Bean that changes the address of the request -->
-        <spring:bean name="change-address-bean-${LOGICAL_ADDRESS}" class="se.skltp.nt.intsvc.ChangeAddressBean">
-            <spring:property name="logicalAddress" value="${LOGICAL_ADDRESS}"/>
+    <spring:beans>
+        <spring:bean id="filter" class="se.skltp.nt.intsvc.MessageFilter">
         </spring:bean>
     </spring:beans>
 
@@ -50,36 +50,42 @@
             doc:name="JMS Topic">
             <jms:transaction action="ALWAYS_BEGIN"/>
         </jms:inbound-endpoint>
-        
-         <logger message="[${LOGICAL_ADDRESS}] From Queue: \n#[payload]" level="INFO" doc:name="Logger"/>
-         
-         <set-variable doc:name="setLogicalAddress" value="${LOGICAL_ADDRESS}" variableName="logicalAddress"/>
-         
-         <custom-transformer
-            class="se.skltp.nt.intsvc.NtPayloadToXmlStreamTransformer"
-             doc:name="Extract an NtPayload" />  
-                     
-        <message-properties-transformer doc:name="Message Properties">
-            <add-message-property key="SOAPAction" value="#[NT_SOAP_ACTION]"/>
-            <add-message-property key="Content-Type" value="#[NT_CONTENT_TYPE]"/>
-        </message-properties-transformer>
-        
-        <cxf:proxy-client doc:name="SOAP" payload="envelope"/>
-        
-        <logger message="[${LOGICAL_ADDRESS}] Before Send: #[message.payload]" level="INFO" doc:name="Logger"/>
 
-        <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+        <choice doc:name="Filter">
+            <when expression='#[app.registry.filter.allows("${LOGICAL_ADDRESS}", message)]'>
 
-        <!-- TODO: should not need to use localhost here... -->
+                <logger message="[${LOGICAL_ADDRESS}] From Queue: \n#[payload]" level="INFO" doc:name="Logger"/>
 
-        <http:outbound-endpoint exchange-pattern="request-response"
-            doc:name="HTTP" method="POST"
-            host="localhost" port="8083" path="#[NT_VP_URL]">
-            <jms:transaction action="ALWAYS_JOIN"/>
-        </http:outbound-endpoint>
+                <set-variable doc:name="setLogicalAddress" value="${LOGICAL_ADDRESS}" variableName="logicalAddress"/>
 
-        <logger message="[${LOGICAL_ADDRESS}] After Send: #[message.payload]" level="INFO" doc:name="Logger"/>
-               
+                <custom-transformer class="se.skltp.nt.intsvc.XmlToXmlStreamReaderWithAddressChange">
+                    <spring:property name="reversible" value="true"/>
+                    <spring:property name="logicalAddress" value="${LOGICAL_ADDRESS}"/>
+                </custom-transformer>
+
+                <message-properties-transformer doc:name="Message Properties">
+                    <add-message-property key="SOAPAction" value="#[message.inboundProperties.NT_SOAP_ACTION]"/>
+                </message-properties-transformer>
+
+                <cxf:proxy-client doc:name="SOAP" payload="envelope"/>
+
+                <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+
+                <http:outbound-endpoint exchange-pattern="request-response"
+                    doc:name="HTTP" method="POST"
+                    host="#[message.inboundProperties.NT_ENDPOINT_HOST]"
+                    port="#[message.inboundProperties.NT_ENDPOINT_PORT]"
+                    path="#[message.inboundProperties.NT_ENDPOINT_PATH]">
+                    <jms:transaction action="ALWAYS_JOIN"/>
+                </http:outbound-endpoint>
+
+            </when>
+            <otherwise>
+                <logger message="${LOGICAL_ADDRESS}: Filtered out #[message.inboundProperties.NT_SERVICE_CONTRACT_URI + '/' + message.inboundProperties.NT_SERVICE_DOMAIN + '/' + message.inboundProperties.NT_CATEGORIZATION]"
+                 level="INFO" doc:name="Logger"/>
+            </otherwise>
+        </choice>
+
         <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
     </flow>
 <% } %>

@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextBuilder;
@@ -42,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import se.skltp.nt.intsvc.SubscriberDatabase;
 
 //import riv.itintegration.registry.getlogicaladdresseesbyservicecontractresponder._1.GetLogicalAddresseesByServiceContractResponseType;
 
@@ -96,10 +96,8 @@ public class Initializer implements ApplicationContextAware, MuleContextNotifica
 //				log.info("{} flows started", flowConfigs.size());
 				
 				
-				List<String> logicalAdresses = new ArrayList<String>();
-				logicalAdresses.add("FOO-1");
-				logicalAdresses.add("FOO-2");
-				
+				List<String> logicalAdresses = new ArrayList<String>(SubscriberDatabase.getInstance().getAllSubscriberLogicalAddresses());
+
 				List<String> flowConfigs = new CreateDynamicFlows(logicalAdresses).getContextConfiguration();
 //
 				log.info("Starting {} flows...", flowConfigs.size());

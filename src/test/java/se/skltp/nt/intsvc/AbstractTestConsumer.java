@@ -23,8 +23,6 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 public abstract class AbstractTestConsumer<ServiceInterface> {
 
-	public static final String SAMPLE_ORIGINAL_CONSUMER_HSAID = "sample-original-consumer-hsaid";
-	
 	protected ServiceInterface _service = null;	
 
     private Class<ServiceInterface> _serviceType;
@@ -52,7 +50,8 @@ public abstract class AbstractTestConsumer<ServiceInterface> {
 		}
         */
 
-		_service = proxyFactory.create(getServiceType()); 
+		_service = proxyFactory.create(getServiceType());
+        assert(_service != null);
 	}
 
     Class<ServiceInterface> getServiceType() {

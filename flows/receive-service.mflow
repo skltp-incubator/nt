@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="receive-service">
-    <flow SubFlow="false" name="receive-service" entity-id="c17380ac-735a-4550-b63a-2a2b39eeac0b">
+    <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#1">
+        <properties>
+            <property name="factory-bean"/>
+            <property name="abstract"/>
+            <property name="scope"/>
+            <property name="init-method"/>
+            <property name="autowire-candidate"/>
+            <property name="factory-method"/>
+            <property name="class" value="se.skltp.nt.intsvc.MessageFilter"/>
+            <property name="parent"/>
+            <property name="children"/>
+            <property name="lazy-init"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
+            <property name="id" value="filter"/>
+            <property name="name"/>
+            <property name="primary"/>
+            <property name="autowire"/>
+            <property name="destroy-method"/>
+            <property name="auxiliary;wrapIn" value="1"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="depends-on"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="receive-service" entity-id="078f1620-e5b6-4b58-956e-d1da4cd49d6e">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
             <property name="initialState"/>
             <property name="bussinessEventsLabel"/>
-            <property name="auxiliary;index" value="1"/>
+            <property name="auxiliary;index" value="3"/>
             <property name="tracking:enable-default-events"/>
         </properties>
         <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
@@ -28,35 +51,19 @@
                     <property name="ref"/>
                     <property name="transformer-refs" value="logReqIn"/>
                     <property name="httpLabel"/>
-                    <property name="address" value="${RECEIVE-SERVICE_INBOUND_URL}"/>
+                    <property name="address" value="${NT-SERVICES_INBOUND_URL}"/>
                     <property name="path"/>
                     <property name="encoding"/>
                     <property name="responseTransformer-refs" value="createSoapFaultIfException logRespOut"/>
                     <property name="method"/>
                     <property name="user"/>
-                    <property name="auxiliary;index" value="2"/>
+                    <property name="auxiliary;index" value="4"/>
                     <property name="responseTimeout"/>
                     <property name="mimeType"/>
                     <property name="connector-ref" value="soitoolkit-http-connector"/>
                 </properties>
             </endpoint>
-            <response index="3" entity-id="response#1">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <compartment entity-id="compartment#1">
-                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
-                        <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
-                            <graphicalData x="0" y="0" width="0" height="0"/>
-                            <properties>
-<property name="message" value="5 #[message.payload]"/>
-<property name="category"/>
-<property name="level" value="INFO"/>
-<property name="auxiliary;index" value="4"/>
-                            </properties>
-                        </pattern>
-                    </lane>
-                </compartment>
-            </response>
-            <pattern name="Convert to XMLStreamReader for envelope" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#1">
+            <pattern name="Get raw envelope" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="port"/>
@@ -76,94 +83,75 @@
                     <property name="auxiliary;index" value="5"/>
                 </properties>
             </pattern>
-            <response index="6" entity-id="response#2">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <compartment entity-id="compartment#2">
-                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
-                        <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#2">
-                            <graphicalData x="0" y="0" width="0" height="0"/>
-                            <properties>
-<property name="message" value="4 #[message.payload]"/>
-<property name="category"/>
-<property name="level" value="INFO"/>
-<property name="auxiliary;index" value="7"/>
-                            </properties>
-                        </pattern>
-                    </lane>
-                </compartment>
-            </response>
-            <response index="8" entity-id="response#3">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <compartment entity-id="compartment#3">
-                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#4">
-                        <pattern name="Set Payload" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
-                            <graphicalData x="0" y="0" width="0" height="0"/>
-                            <properties>
-<property name="value" value="#[savedResponse]"/>
-<property name="auxiliary;index" value="9"/>
-                            </properties>
-                        </pattern>
-                    </lane>
-                </compartment>
-            </response>
-            <pattern name="Extract rivtaVersion and service contract" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#1">
+            <pattern name="Analyze message and set outbounds" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
-                    <property name="class" value="se.skltp.nt.intsvc.ServiceContractAndRivtaVersionExtractor"/>
-                    <property name="auxiliary;index" value="10"/>
+                    <property name="class" value="se.skltp.nt.intsvc.PropertyExtractor"/>
+                    <property name="auxiliary;index" value="6"/>
                     <property name="mimeType"/>
                 </properties>
             </pattern>
-            <response index="11" entity-id="response#4">
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
-                <compartment entity-id="compartment#4">
-                    <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#5">
+                <properties>
+                    <property name="message" value="1 #[message.outboundProperties.keySet()]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="7"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="2 #[message.payload]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
+                    <property name="auxiliary;index" value="8"/>
+                </properties>
+            </pattern>
+            <splitter index="9" name="TestChoice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property-collection name="a7838180-9487-42ee-b025-d7c54794ce18">
+                        <property name="choice.otherwise" value="true"/>
+                        <property-collection name="choice.attributes"/>
+                    </property-collection>
+                    <property-collection name="0d8d31d7-1f79-468f-8a8b-8ca0bbee010e">
+                        <property name="choice.expression" value="#[app.registry.filter.allows(message, 'Foo-1')]"/>
+                        <property-collection name="choice.attributes">
+                            <property name="expression" value="#[app.registry.filter.allows(message, 'Foo-1')]"/>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+                <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#2"/>
+                <compartment entity-id="compartment#1">
+                    <lane hadOnlyOneElement="false" index="11" isChoiceOtherwiseLane="false" entity-id="0d8d31d7-1f79-468f-8a8b-8ca0bbee010e">
                         <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#3">
                             <graphicalData x="0" y="0" width="0" height="0"/>
                             <properties>
-<property name="message" value="3 #[message.payload]"/>
+<property name="message" value="allows"/>
 <property name="category"/>
 <property name="level" value="INFO"/>
-<property name="auxiliary;index" value="12"/>
+<property name="auxiliary;index" value="11"/>
+                            </properties>
+                        </pattern>
+                    </lane>
+                    <lane hadOnlyOneElement="false" index="13" isChoiceOtherwiseLane="true" entity-id="a7838180-9487-42ee-b025-d7c54794ce18">
+                        <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="message" value="blocked"/>
+<property name="category"/>
+<property name="level" value="INFO"/>
+<property name="auxiliary;index" value="13"/>
                             </properties>
                         </pattern>
                     </lane>
                 </compartment>
-            </response>
-            <pattern name="Strip header" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#2">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="port"/>
-                    <property name="wsdlLocation"/>
-                    <property name="serviceClass"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/cxf/proxy-service"/>
-                    <property name="payload" value="body"/>
-                    <property name="configuration-ref"/>
-                    <property name="namespace"/>
-                    <property name="validationEnabled"/>
-                    <property name="bindingId"/>
-                    <property name="onException"/>
-                    <property name="service"/>
-                    <property name="mtomEnabled"/>
-                    <property name="soapVersion"/>
-                    <property name="enableMuleSoapHeaders"/>
-                    <property name="auxiliary;index" value="13"/>
-                </properties>
-            </pattern>
-            <pattern name="Create an NtPayload" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#2">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="returnClass"/>
-                    <property name="ignoreBadInput"/>
-                    <property name="encoding"/>
-                    <property name="class" value="se.skltp.nt.intsvc.SoapBodyToNtPayloadTransformer"/>
-                    <property name="auxiliary;index" value="14"/>
-                    <property name="mimeType"/>
-                </properties>
-            </pattern>
+            </splitter>
             <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="JMS Topic" type="http://www.mulesoft.org/schema/mule/jms/endpoint" entity-id="JMS#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
@@ -180,58 +168,40 @@
                     <property name="address"/>
                     <property name="encoding"/>
                     <property name="responseTransformer-refs"/>
-                    <property name="auxiliary;index" value="15"/>
+                    <property name="auxiliary;index" value="14"/>
                     <property name="mimeType"/>
                     <property name="responseTimeout"/>
                     <property name="connector-ref" value="soitoolkit-jms-connector"/>
                 </properties>
             </endpoint>
-            <pattern name="Set response to SOAP-message text" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#2">
+            <pattern name="Set response to SOAP-message text" type="http://www.mulesoft.org/schema/mule/core/set-payload" entity-id="Set Payload#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="value" value="&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:urn=&quot;urn:org.soitoolkit.refapps.sd.sample.schema:v1&quot;&gt;&lt;soapenv:Header/&gt;&lt;soapenv:Body/&gt;&lt;/soapenv:Envelope&gt;"/>
+                    <property name="auxiliary;index" value="15"/>
+                </properties>
+            </pattern>
+            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#5">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="message" value="3 #[message.payload]"/>
+                    <property name="category"/>
+                    <property name="level" value="INFO"/>
                     <property name="auxiliary;index" value="16"/>
                 </properties>
             </pattern>
-            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#4">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="message" value="1 #[message.payload]"/>
-                    <property name="category"/>
-                    <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="17"/>
-                </properties>
-            </pattern>
-            <pattern name="Java" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#3">
+            <pattern name="CreateXmlStreamReaderResponse" type="org.mule.tooling.ui.modules.core.pattern.customTransformer" entity-id="Java#2">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <properties>
                     <property name="returnClass"/>
                     <property name="ignoreBadInput"/>
                     <property name="encoding"/>
                     <property name="class" value="org.mule.module.xml.transformer.XmlToXMLStreamReader"/>
-                    <property name="auxiliary;index" value="18"/>
+                    <property name="auxiliary;index" value="17"/>
                     <property name="mimeType"/>
                 </properties>
             </pattern>
-            <pattern name="saveResponse" type="http://www.mulesoft.org/schema/mule/core/variable-transformer" entity-id="Variable#1">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="variableName" value="savedResponse"/>
-                    <property name="value" value="#[message.payload]"/>
-                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/core/set-variable"/>
-                    <property name="auxiliary;index" value="19"/>
-                </properties>
-            </pattern>
-            <pattern name="Logger" type="http://www.mulesoft.org/schema/mule/core/logger" entity-id="Logger#5">
-                <graphicalData x="0" y="0" width="0" height="0"/>
-                <properties>
-                    <property name="message" value="2 #[message.payload]"/>
-                    <property name="category"/>
-                    <property name="level" value="INFO"/>
-                    <property name="auxiliary;index" value="20"/>
-                </properties>
-            </pattern>
-            <unknown description="false" index="21" entity-id="unknown#1">
+            <unknown description="false" index="18" entity-id="unknown#1">
                 <graphicalData x="0" y="0" width="0" height="0"/>
                 <content>&lt;custom-exception-strategy xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; class=&quot;org.soitoolkit.commons.mule.error.ServiceExceptionStrategy&quot;/&gt;</content>
             </unknown>

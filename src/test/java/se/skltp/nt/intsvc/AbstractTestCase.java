@@ -43,199 +43,202 @@ import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import org.soitoolkit.commons.mule.util.ValueHolder;
 import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
 import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.riv.itintegration.notification.v1.Filter;
 
 import static org.junit.Assert.*;
 
 /**
  * Extends the base class in Mule, org.mule.tck.junit4.FuntionalTestCase.
- * 
- * @author Magnus Larsson
  *
+ * @author Magnus Larsson
  */
 public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.junit4.AbstractTestCase {
-    
-	protected static final int EI_TEST_TIMEOUT   = 10000;
-	protected static final int EI_SHORT_WAITTIME =  500;
+
+    protected static final int EI_TEST_TIMEOUT = 5000;
+    protected static final int EI_SHORT_WAITTIME = 500;
 
     protected static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
-	protected static final String INFO_LOG_QUEUE  = rb.getString("SOITOOLKIT_LOG_INFO_QUEUE");
-	protected static final String ERROR_LOG_QUEUE = rb.getString("SOITOOLKIT_LOG_ERROR_QUEUE");
-	protected static final String NOTIFY_TOPIC = rb.getString("NOTIFY_TOPIC");
+    protected static final String INFO_LOG_QUEUE = rb.getString("SOITOOLKIT_LOG_INFO_QUEUE");
+    protected static final String ERROR_LOG_QUEUE = rb.getString("SOITOOLKIT_LOG_ERROR_QUEUE");
+    protected static final String NOTIFY_TOPIC = rb.getString("NOTIFY_TOPIC");
 
-	private AbstractJmsTestUtil jmsUtil = null;
+    private AbstractJmsTestUtil jmsUtil = null;
 
-	public AbstractTestCase() {
-		super();
-	}
-    
-	protected AbstractJmsTestUtil getJmsUtil() {
-		
-		// TODO: Fix lazy init update_of JMS connection et al so that we can create jmsutil in the declaration
-		// (The embedded ActiveMQ queue manager is not yet started by Mule when jmsutil is declared...)
-		if (jmsUtil == null) {
-			String clientId = UUID.randomUUID().toString();
-			jmsUtil = new ActiveMqJmsTestUtil("vm://localhost", clientId);
-		}
-		
-		return jmsUtil;
-	}
+    public AbstractTestCase() {
+        super();
+    }
 
-	protected List<Message> assertQueueDepth(String queueName, int expectedDepth) {
-	    List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
-		assertEquals(expectedDepth, messages.size());
-		return messages;
-	}
+    protected AbstractJmsTestUtil getJmsUtil() {
 
-	protected List<Message> assertQueueContainsMessage(String queueName, String expectedText) {
-	    try {
-			List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
+        // TODO: Fix lazy init update_of JMS connection et al so that we can create jmsutil in the declaration
+        // (The embedded ActiveMQ queue manager is not yet started by Mule when jmsutil is declared...)
+        if ( jmsUtil == null ) {
+            String clientId = UUID.randomUUID().toString();
+            jmsUtil = new ActiveMqJmsTestUtil("vm://localhost", clientId);
+        }
 
-			System.err.println("MSG CNT: " + messages.size());
-			for (Message message : messages) {
-				String text = ((TextMessage)message).getText();
-				System.err.println("MSG: " + text);
-				if (text.contains(expectedText)) return messages;
-			}
-			
-			fail("Faild to find any message on the queue " + queueName + " that contains the text: " + expectedText);
-			return messages;
-		} catch (JMSException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	protected List<Message> assertQueueMatchesMessages(String queueName, String... expectedRegexps) {
-	    try {
-			List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
-			System.err.println("MSG CNT: " + messages.size());
+        return jmsUtil;
+    }
 
-			// Go through the messages in the queue checking each expected regexp, one by one
-			for (int i = 0; i < expectedRegexps.length; i++) {
+    protected List<Message> assertQueueDepth(String queueName, int expectedDepth) {
+        List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
+        assertEquals(expectedDepth, messages.size());
+        return messages;
+    }
 
-				// The regexp to check this time
-				String expectedRegexp = expectedRegexps[i];
+    protected List<Message> assertQueueContainsMessage(String queueName, String expectedText) {
+        try {
+            List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
 
-				// Look for a match
-				boolean found = false;
-				for (Message message : messages) {
-					String text = ((TextMessage)message).getText();
-					System.err.println("MSG: " + text);
-					if (text.matches(expectedRegexp)) found = true;
-				}
-				if (!found) {
-					// If not found then fail with a proper mesage
-					fail("Faild to find any message on the queue " + queueName + " that contains the text: " + expectedRegexp);
-				}
-			}
+            System.err.println("MSG CNT: " + messages.size());
+            for ( Message message : messages ) {
+                String text = ((TextMessage) message).getText();
+                System.err.println("MSG: " + text);
+                if ( text.contains(expectedText) ) return messages;
+            }
 
-			return messages;
-		} catch (JMSException e) {
-			throw new RuntimeException(e);
-		}
-	}
+            fail("Faild to find any message on the queue " + queueName + " that contains the text: " + expectedText);
+            return messages;
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected List<Message> assertQueueMatchesMessages(String queueName, String... expectedRegexps) {
+        try {
+            List<Message> messages = getJmsUtil().browseMessagesOnQueue(queueName);
+            System.err.println("MSG CNT: " + messages.size());
+
+            // Go through the messages in the queue checking each expected regexp, one by one
+            for ( int i = 0; i < expectedRegexps.length; i++ ) {
+
+                // The regexp to check this time
+                String expectedRegexp = expectedRegexps[i];
+
+                // Look for a match
+                boolean found = false;
+                for ( Message message : messages ) {
+                    String text = ((TextMessage) message).getText();
+                    System.err.println("MSG: " + text);
+                    if ( text.matches(expectedRegexp) ) found = true;
+                }
+                if ( !found ) {
+                    // If not found then fail with a proper mesage
+                    fail("Faild to find any message on the queue " + queueName + " that contains the text: " + expectedRegexp);
+                }
+            }
+
+            return messages;
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
-	protected void assertRequest(String expectedXml, MuleMessage actual) {
-		TextMessage actualJms = (TextMessage)actual.getPayload();
-		assertRequest(expectedXml, actualJms);
-	}
+    protected void assertRequest(String expectedXml, MuleMessage actual) {
+        TextMessage actualJms = (TextMessage) actual.getPayload();
+        assertRequest(expectedXml, actualJms);
+    }
 
-	protected void assertRequest(String expectedXml, TextMessage actualJms) {
-		try {
-			String actualXml = actualJms.getText();
-			
-			assertXml(expectedXml, actualXml);
-		} catch (JMSException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    protected void assertRequest(String expectedXml, TextMessage actualJms) {
+        try {
+            String actualXml = actualJms.getText();
+
+            assertXml(expectedXml, actualXml);
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     private void assertXml(String expected, String actual) {
 
-    	// We're using Xml Unit to compare results
+        // We're using Xml Unit to compare results
         // Ignore whitespace and comments
 
-    	try {
-	        XMLUnit.setIgnoreWhitespace(true);
-	        XMLUnit.setIgnoreComments(true);
-	        
-	        // Check if XSL transformation went OK
-	        Diff diff = new Diff(expected, actual);
+        try {
+            XMLUnit.setIgnoreWhitespace(true);
+            XMLUnit.setIgnoreComments(true);
 
-	        assertTrue("XML compare failed " + diff, diff.similar());
+            // Check if XSL transformation went OK
+            Diff diff = new Diff(expected, actual);
 
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-    }        
+            assertTrue("XML compare failed " + diff, diff.similar());
 
-	
-	protected ReceiveNotificationType createReceiveNotificationRequest(String subject, String category) {
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-		ReceiveNotificationType request = new ReceiveNotificationType();
-		
-		request.setSubject(subject);
-		request.setCategory(category);
-		
-		return request;
+
+    protected ReceiveNotificationType createReceiveNotificationRequest(String serviceDomain, String category) {
+
+        ReceiveNotificationType request = new ReceiveNotificationType();
+
+        Filter filter = new Filter();
+        filter.setServiceDomain(serviceDomain);
+        filter.setCategorization(category);
+        request.setFilter(filter);
+
+        return request;
     }
 
     protected ProcessNotificationType createProcessNotificationRequest() {
 
         return new ProcessNotificationType();
     }
-	
-	protected void waitForBackgroundProcessing() {
-		try {
-			Thread.sleep(EI_SHORT_WAITTIME);
-		} catch (InterruptedException e) {}
-	}
 
-	/**
-	 * Waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code> and with the action <code>action</code>. 
-	 * 
-	 * Sample usage: TBS
-	 * 
-     * @param outboundEndpointName
-     * @param action
-	 * @param timeout in ms
-	 * @return the MuleMessage sent to the named service component
-	 */
-	protected MuleMessage waitForDelivery(final String outboundEndpointName, final int action, long timeout) {
-		return dispatchAndWaitForDelivery(null, outboundEndpointName, action, timeout);
+    protected void waitForBackgroundProcessing() {
+        try {
+            Thread.sleep(EI_SHORT_WAITTIME);
+        } catch (InterruptedException e) {
+        }
     }
 
-	/**
-	 * Sends the <code>payload</code> and <code>headers</code> to the <code>inboundEndpointAddress</code> and waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code>. 
-	 * 
-	 * Sample usage:
-	 * <tt>
-	 *	public void testTransferKorttransaktioner() throws Exception {
-	 *		String expectedPayload = "Yada, yada, yada...";
-	 *
-	 *		MuleMessage message = dispatchAndWaitForDelivery(
-	 *			"sftp://dfcx0346@vfin8003.volvofinans.net/sftp/vfkonto/ut",
-	 *			expectedPayload,
-	 *			createFileHeader("from_vfkonto.dat"),
-	 *			"volvokort-test-endpoint",
-	 *			TIMEOUT);
-	 *
-	 *		String actualPayload = message.getPayloadAsString();
-	 *		assertEquals(expectedPayload, actualPayload); 
-	 *	}	 
-	 * </tt>
-	 * 
-	 * @param inboundEndpointAddress
-	 * @param payload
-	 * @param headers
-	 * @param outboundEndpointName
-	 * @param action as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
-	 * @param timeout in ms
-	 * @return the received MuleMEssage on the outboundEndpoint
-	 */
-	protected MuleMessage dispatchAndWaitForDelivery(String inboundEndpointAddress, Object payload, Map<String, String> headers, final String outboundEndpointName, final int action, long timeout) {
-		return dispatchAndWaitForDelivery(new DispatcherMuleClientImpl(muleContext, inboundEndpointAddress, payload, headers), outboundEndpointName, action, timeout);
+    /**
+     * Waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code> and with the action <code>action</code>.
+     * <p/>
+     * Sample usage: TBS
+     *
+     * @param outboundEndpointName
+     * @param action
+     * @param timeout              in ms
+     * @return the MuleMessage sent to the named service component
+     */
+    protected MuleMessage waitForDelivery(final String outboundEndpointName, final int action, long timeout) {
+        return dispatchAndWaitForDelivery(null, outboundEndpointName, action, timeout);
+    }
+
+    /**
+     * Sends the <code>payload</code> and <code>headers</code> to the <code>inboundEndpointAddress</code> and waits <code>timeout</code> ms for a <code>MuleMessage</code> to arrive on outboundEndpoint with the name <code>outboundEndpointName</code>.
+     * <p/>
+     * Sample usage:
+     * <tt>
+     * public void testTransferKorttransaktioner() throws Exception {
+     * String expectedPayload = "Yada, yada, yada...";
+     * <p/>
+     * MuleMessage message = dispatchAndWaitForDelivery(
+     * "sftp://dfcx0346@vfin8003.volvofinans.net/sftp/vfkonto/ut",
+     * expectedPayload,
+     * createFileHeader("from_vfkonto.dat"),
+     * "volvokort-test-endpoint",
+     * TIMEOUT);
+     * <p/>
+     * String actualPayload = message.getPayloadAsString();
+     * assertEquals(expectedPayload, actualPayload);
+     * }
+     * </tt>
+     *
+     * @param inboundEndpointAddress
+     * @param payload
+     * @param headers
+     * @param outboundEndpointName
+     * @param action                 as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
+     * @param timeout                in ms
+     * @return the received MuleMEssage on the outboundEndpoint
+     */
+    protected MuleMessage dispatchAndWaitForDelivery(String inboundEndpointAddress, Object payload, Map<String, String> headers, final String outboundEndpointName, final int action, long timeout) {
+        return dispatchAndWaitForDelivery(new DispatcherMuleClientImpl(muleContext, inboundEndpointAddress, payload, headers), outboundEndpointName, action, timeout);
     }
 
 
@@ -244,78 +247,82 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
      *
      * @param dispatcher
      * @param outboundEndpointName
-     * @param action as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
-   	 * @param timeout in ms
-   	 * @return the received MuleMEssage on the outboundEndpoint
+     * @param action               as specified by org.mule.context.notification.EndpointMessageNotification: MESSAGE_RECEIVED, MESSAGE_DISPATCHED, MESSAGE_SENT or MESSAGE_REQUESTED
+     * @param timeout              in ms
+     * @return the received MuleMEssage on the outboundEndpoint
      */
-	@SuppressWarnings("rawtypes")
-	protected MuleMessage dispatchAndWaitForDelivery(Dispatcher dispatcher, final String outboundEndpointName, final int action, long timeout) {
-		
-		// Declare MuleMessage to return
-		final ValueHolder<MuleMessage> receivedMessageHolder = new ValueHolder<MuleMessage>();
-		
-		// Declare countdown latch and listener
-		final CountDownLatch latch = new CountDownLatch(1);
-		EndpointMessageNotificationListener listener = null;
+    @SuppressWarnings("rawtypes")
+    protected MuleMessage dispatchAndWaitForDelivery(Dispatcher dispatcher, final String outboundEndpointName, final int action, long timeout) {
 
-		try {
+        // Declare MuleMessage to return
+        final ValueHolder<MuleMessage> receivedMessageHolder = new ValueHolder<MuleMessage>();
 
-			// Next create a listener that listens for dispatch events on the outbound endpoint
-			listener = new EndpointMessageNotificationListener() {
-				public void onNotification(ServerNotification notification) {
-					if (logger.isDebugEnabled()) logger.debug("notification received on " + notification.getResourceIdentifier() + " (action: " + notification.getActionName() + ")");
+        // Declare countdown latch and listener
+        final CountDownLatch latch = new CountDownLatch(1);
+        EndpointMessageNotificationListener listener = null;
 
-					// Only care about EndpointMessageNotification
-					if (notification instanceof EndpointMessageNotification) {
-						EndpointMessageNotification endpointNotification = (EndpointMessageNotification)notification;
+        try {
 
-						// Extract action and name update_of the endpoint
-						int    actualAction   = endpointNotification.getAction();
-						String actualEndpoint = MuleUtil.getEndpointName(endpointNotification);
+            // Next create a listener that listens for dispatch events on the outbound endpoint
+            listener = new EndpointMessageNotificationListener() {
+                public void onNotification(ServerNotification notification) {
+                    if ( logger.isDebugEnabled() )
+                        logger.debug("notification received on " + notification.getResourceIdentifier() + " (action: " + notification.getActionName() + ")");
 
-						// If it is a dispatch event on our outbound endpoint then countdown the latch.
-						if (logger.isDebugEnabled()) {
-							logger.debug(actualAction == action);
-							logger.debug(actualEndpoint.equals(outboundEndpointName));
-						}
-						if (actualAction == action && actualEndpoint.equals(outboundEndpointName)) {
-							if (logger.isDebugEnabled()) logger.debug("Expected notification received on " + actualEndpoint + " (action: " + endpointNotification.getActionName() + "), time to countdown the latch");
-							receivedMessageHolder.value = (MuleMessage)endpointNotification.getSource();
-							latch.countDown();
+                    // Only care about EndpointMessageNotification
+                    if ( notification instanceof EndpointMessageNotification ) {
+                        EndpointMessageNotification endpointNotification = (EndpointMessageNotification) notification;
 
-						} else {
-							if (logger.isDebugEnabled()) logger.debug("A not matching notification received on " + actualEndpoint + " (action: " + endpointNotification.getActionName() + "), continue to wait for the right one...");							
-						}
-					}
-				}
-			};
+                        // Extract action and name update_of the endpoint
+                        int actualAction = endpointNotification.getAction();
+                        String actualEndpoint = MuleUtil.getEndpointName(endpointNotification);
 
-			// Now register the listener
-			muleContext.getNotificationManager().addListener(listener);
+                        // If it is a dispatch event on our outbound endpoint then countdown the latch.
+                        if ( logger.isDebugEnabled() ) {
+                            logger.debug(actualAction == action);
+                            logger.debug(actualEndpoint.equals(outboundEndpointName));
+                        }
+                        if ( actualAction == action && actualEndpoint.equals(outboundEndpointName) ) {
+                            if ( logger.isDebugEnabled() )
+                                logger.debug("Expected notification received on " + actualEndpoint + " (action: " + endpointNotification.getActionName() + "), time to countdown the latch");
+                            receivedMessageHolder.value = (MuleMessage) endpointNotification.getSource();
+                            latch.countDown();
 
-			// Perform the actual dispatch, if any...
-			if (dispatcher != null) {
-				dispatcher.doDispatch();
-			}
-			
-			// Wait for the delivery to occur...
-			if (logger.isDebugEnabled()) logger.debug("Waiting for message to be delivered to the endpoint...");
-			boolean workDone = latch.await(timeout, TimeUnit.MILLISECONDS);
-			if (logger.isDebugEnabled()) logger.debug((workDone) ? "Message delivered, continue..." : "No message delivered, timeout occurred!");
+                        } else {
+                            if ( logger.isDebugEnabled() )
+                                logger.debug("A not matching notification received on " + actualEndpoint + " (action: " + endpointNotification.getActionName() + "), continue to wait for the right one...");
+                        }
+                    }
+                }
+            };
 
-			// Raise a fault if the test timed out
-			assertTrue("Test timed out. It took more than " + timeout + " milliseconds. If this error occurs the test probably needs a longer time out (on your computer/network)", workDone);
+            // Now register the listener
+            muleContext.getNotificationManager().addListener(listener);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("An unexpected error occurred: " + e.getMessage());
+            // Perform the actual dispatch, if any...
+            if ( dispatcher != null ) {
+                dispatcher.doDispatch();
+            }
 
-		} finally {
-			// Always remove the listener if created
-			if (listener != null) muleContext.getNotificationManager().removeListener(listener);
-		}
-		
-		return receivedMessageHolder.value;		
+            // Wait for the delivery to occur...
+            if ( logger.isDebugEnabled() ) logger.debug("Waiting for message to be delivered to the endpoint...");
+            boolean workDone = latch.await(timeout, TimeUnit.MILLISECONDS);
+            if ( logger.isDebugEnabled() )
+                logger.debug((workDone) ? "Message delivered, continue..." : "No message delivered, timeout occurred!");
+
+            // Raise a fault if the test timed out
+            assertTrue("Test timed out. It took more than " + timeout + " milliseconds. If this error occurs the test probably needs a longer time out (on your computer/network)", workDone);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("An unexpected error occurred: " + e.getMessage());
+
+        } finally {
+            // Always remove the listener if created
+            if ( listener != null ) muleContext.getNotificationManager().removeListener(listener);
+        }
+
+        return receivedMessageHolder.value;
     }
-    
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc"
 	xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
@@ -10,12 +10,13 @@ http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
 
 	<flow name="receive-any-service" doc:name="receive-any-service">
 
 		<http:inbound-endpoint exchange-pattern="request-response"
-			address="${RECEIVE-SERVICE_INBOUND_URL}" connector-ref="soitoolkit-http-connector"
+			address="${NT-SERVICES_INBOUND_URL}" connector-ref="soitoolkit-http-connector"
 			transformer-refs="logReqIn" responseTransformer-refs="createSoapFaultIfException logRespOut"
 			doc:name="HTTP" />
 			

@@ -1,12 +1,11 @@
 package se.skltp.nt;
 
- 
-import org.soitoolkit.commons.mule.test.StandaloneMuleServer;
-
-import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.soitoolkit.commons.mule.test.StandaloneMuleServer;
+import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
+import se.skltp.nt.intsvc.CreatePropsAndConvertToStringTransformer;
 
 
 public class NtMuleServer {
@@ -32,10 +31,15 @@ public class NtMuleServer {
         //         Note: Actually loads all *-service.xml files that are specified in the file "src/main/app/mule-deploy.properties"
         //
         StandaloneMuleServer muleServer = new StandaloneMuleServer(MULE_SERVER_ID, true, true);
- 
+
+        // during testing, we can't rely on a VP to re-route to producers
+        CreatePropsAndConvertToStringTransformer.setEndpointPortOverride("8083");
+
         // Start the server
 		muleServer.run();
 	}
+
+
 
     /**
      * Address based on usage of the servlet-transport and a config-property for the URI-part
