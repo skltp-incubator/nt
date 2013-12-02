@@ -1,0 +1,264 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for se.skltp.nt:nt-modules-intsvc:mule:1.0.0-SNAPSHOT
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: se.skltp.nt:nt-composite-schemas-tak:jar -> version (?) vs 1.0.0-SNAPSHOT @ line 69, column 21
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: se.skltp.nt:nt-composite-schemas-test:jar -> version (?) vs 1.0.0-SNAPSHOT @ line 75, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] nt-parent
+[INFO] nt-composite-schemas-test
+[INFO] nt-composite-schemas-tak
+[INFO] nt-modules-intsvc
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nt-parent 1.0.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ nt-parent ---
+[INFO] se.skltp.nt:nt-parent:pom:1.0.0-SNAPSHOT
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nt-composite-schemas-test 1.0.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ nt-composite-schemas-test ---
+[INFO] se.skltp.nt:nt-composite-schemas-test:jar:1.0.0-SNAPSHOT
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nt-composite-schemas-tak 1.0.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ nt-composite-schemas-tak ---
+[INFO] se.skltp.nt:nt-composite-schemas-tak:jar:1.0.0-SNAPSHOT
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building nt-modules-intsvc 1.0.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.1:tree (default-cli) @ nt-modules-intsvc ---
+[INFO] se.skltp.nt:nt-modules-intsvc:mule:1.0.0-SNAPSHOT
+[INFO] +- se.skltp.nt:nt-composite-schemas-tak:jar:1.0.0-SNAPSHOT:compile
+[INFO] +- se.skltp.nt:nt-composite-schemas-test:jar:1.0.0-SNAPSHOT:test
+[INFO] +- se.rivta.infrastructure.itintegration:ServiceContracts_infrastructure_itintegration_registry:jar:2.0-M6:compile
+[INFO] +- org.soitoolkit.commons.components:soitoolkit-commons-mule:jar:0.6.1-M2:compile
+[INFO] |  +- org.soitoolkit.commons.components:soitoolkit-commons-xml:jar:0.6.1-M2:compile
+[INFO] |  +- org.soitoolkit.commons.components:soitoolkit-commons-schemas:jar:0.4.1:compile (version managed from 0.6.1-M2)
+[INFO] |  +- org.slf4j:slf4j-api:jar:1.7.5:compile
+[INFO] |  +- org.slf4j:slf4j-log4j12:jar:1.7.5:compile
+[INFO] |  |  \- log4j:log4j:jar:1.2.12:compile (version managed from 1.2.17)
+[INFO] |  \- org.slf4j:jcl-over-slf4j:jar:1.6.1:compile
+[INFO] +- org.soitoolkit.commons.poms:soitoolkit-test-dependencies:pom:0.6.1-M2:test
+[INFO] |  +- hsqldb:hsqldb:jar:1.8.0.7:test
+[INFO] |  +- org.apache.derby:derbyclient:jar:10.6.2.1:test
+[INFO] |  +- org.apache.derby:derby:jar:10.6.2.1:test
+[INFO] |  +- org.apache.derby:derbytools:jar:10.6.2.1:test
+[INFO] |  +- org.mockftpserver:MockFtpServer:jar:2.2:test
+[INFO] |  \- org.apache.sshd:sshd-core:jar:0.6.0:test
+[INFO] |     \- org.apache.mina:mina-core:jar:2.0.2:test
+[INFO] +- org.soitoolkit.commons.poms.mule-dependencies:soitoolkit-mule-3.3.0-dependencies:pom:0.6.1-M2:compile
+[INFO] |  +- org.jasypt:jasypt:jar:1.8:compile
+[INFO] |  +- xerces:xercesImpl:jar:2.9.1:compile
+[INFO] |  |  \- xml-apis:xml-apis:jar:1.3.04:compile
+[INFO] |  +- org.safehaus.jug:jug.osgi:jar:2.0.0:compile
+[INFO] |  +- org.mule:mule-core:jar:3.3.0:compile
+[INFO] |  |  +- commons-beanutils:commons-beanutils:jar:1.8.0:compile
+[INFO] |  |  +- commons-cli:commons-cli:jar:1.2:compile
+[INFO] |  |  +- commons-collections:commons-collections:jar:3.2.1:compile
+[INFO] |  |  +- commons-io:commons-io:jar:1.4:compile
+[INFO] |  |  +- commons-lang:commons-lang:jar:2.4:compile
+[INFO] |  |  +- commons-pool:commons-pool:jar:1.5.3:compile
+[INFO] |  |  +- javax.activation:activation:jar:1.1-osgi:compile
+[INFO] |  |  +- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1.1:compile
+[INFO] |  |  +- org.apache.geronimo.specs:geronimo-j2ee-connector_1.5_spec:jar:1.1-osgi:compile
+[INFO] |  |  +- javax.annotation:jsr250-api:jar:1.0:compile
+[INFO] |  |  +- asm:asm:jar:3.1:compile
+[INFO] |  |  +- asm:asm-commons:jar:3.1:compile
+[INFO] |  |  |  \- asm:asm-tree:jar:3.1:compile
+[INFO] |  |  +- org.mvel:mvel2:jar:2.0.19:compile
+[INFO] |  |  +- org.jgrapht:jgrapht-jdk1.5:jar:0.7.3:compile
+[INFO] |  |  \- junit:junit:jar:4.11:compile
+[INFO] |  |     \- org.hamcrest:hamcrest-core:jar:1.3:compile
+[INFO] |  +- org.mule.modules:mule-module-spring-config:jar:3.3.0:compile
+[INFO] |  |  +- org.mule.modules:mule-module-annotations:jar:3.3.0:compile
+[INFO] |  |  |  \- cglib:cglib-nodep:jar:2.2:compile
+[INFO] |  |  +- org.springframework:spring-context:jar:3.2.4.RELEASE:compile (version managed from 3.1.1.RELEASE)
+[INFO] |  |  |  \- org.springframework:spring-expression:jar:3.2.4.RELEASE:compile
+[INFO] |  |  +- dom4j:dom4j:jar:1.6.1-osgi:compile
+[INFO] |  |  \- jaxen:jaxen:jar:1.1.1:compile
+[INFO] |  |     \- jdom:jdom:jar:1.0:compile
+[INFO] |  +- org.mule.modules:mule-module-jbossts:jar:3.3.0:compile
+[INFO] |  |  \- org.jboss.jbossts:jbossjta:jar:4.15.0.Final:compile
+[INFO] |  |     \- org.jboss.logging:jboss-logging:jar:3.0.0.Beta5:compile
+[INFO] |  +- org.mule.modules:mule-module-scripting:jar:3.3.0:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:3.1.1.RELEASE:compile
+[INFO] |  |  |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  |  |  \- org.springframework:spring-asm:jar:3.1.1.RELEASE:compile
+[INFO] |  |  +- org.mule.modules:mule-module-builders:jar:3.3.0:compile
+[INFO] |  |  |  \- org.springframework:spring-web:jar:3.1.1.RELEASE:compile
+[INFO] |  |  +- org.livetribe:livetribe-jsr223:jar:2.0.5:compile
+[INFO] |  |  \- org.codehaus.groovy:groovy-all:jar:1.8.6:compile
+[INFO] |  +- org.mule.modules:mule-module-xml:jar:3.3.0:compile
+[INFO] |  |  +- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[INFO] |  |  +- commons-jxpath:commons-jxpath:jar:1.3-osgi:compile
+[INFO] |  |  +- com.thoughtworks.xstream:xstream:jar:1.4.2:compile
+[INFO] |  |  |  \- xmlpull:xmlpull:jar:1.1.3.1:compile
+[INFO] |  |  +- joda-time:joda-time:jar:1.6:compile
+[INFO] |  |  +- xpp3:xpp3_min:jar:1.1.3.4.O-osgi:compile
+[INFO] |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.0.8:compile
+[INFO] |  |  +- net.java.dev.stax-utils:stax-utils:jar:20080702-osgi:compile
+[INFO] |  |  +- net.sf.saxon:saxon:jar:8.9.0.4-osgi:compile
+[INFO] |  |  +- net.sf.saxon:saxon-dom:jar:8.9.0.4-osgi:compile
+[INFO] |  |  +- net.sf.saxon:saxon-xqj:jar:8.9.0.4:compile
+[INFO] |  |  \- javax.xml.bind:jaxb-api:jar:2.1:compile
+[INFO] |  +- org.mule.modules:mule-module-client:jar:3.3.0:compile
+[INFO] |  +- org.mule.modules:mule-module-launcher:jar:3.3.0:compile
+[INFO] |  |  +- org.mule.modules:mule-module-reboot:jar:3.3.0:compile
+[INFO] |  |  \- tanukisoft:wrapper:jar:3.2.3:compile
+[INFO] |  +- org.mule.tests:mule-tests-functional:jar:3.3.0:compile
+[INFO] |  |  +- org.springframework:spring-beans:jar:3.2.4.RELEASE:compile
+[INFO] |  |  \- org.mule:mule-core:test-jar:tests:3.3.0:compile
+[INFO] |  |     \- org.safehaus.jug:jug:jar:asl:2.0.0:compile
+[INFO] |  +- org.mule.modules:mule-module-json:jar:3.3.0:compile
+[INFO] |  |  +- org.codehaus.jackson:jackson-core-asl:jar:1.8.0:compile
+[INFO] |  |  +- org.codehaus.jackson:jackson-mapper-asl:jar:1.8.0:compile
+[INFO] |  |  +- de.odysseus.staxon:staxon:jar:0.7.0:compile
+[INFO] |  |  \- org.codehaus.woodstox:stax2-api:jar:3.0.2:compile
+[INFO] |  |     \- javax.xml.stream:stax-api:jar:1.0-2:compile
+[INFO] |  +- org.mule.modules:mule-module-rest-router:jar:1.2:compile
+[INFO] |  |  +- org.mule.tools.devkit:mule-devkit-annotations:jar:3.3.1:compile
+[INFO] |  |  |  \- javax.inject:javax.inject:jar:1:compile
+[INFO] |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile (version managed from 1.0.0.GA)
+[INFO] |  +- org.mule.transports:mule-transport-vm:jar:3.3.0:compile
+[INFO] |  +- org.mule.transports:mule-transport-file:jar:3.3.0:compile
+[INFO] |  +- org.mule.transports:mule-transport-ftp:jar:3.3.0:compile
+[INFO] |  |  +- commons-net:commons-net:jar:2.0:compile
+[INFO] |  |  \- oro:oro:jar:2.0.8-osgi:compile
+[INFO] |  +- org.mule.transports:mule-transport-http:jar:3.3.0:compile
+[INFO] |  |  +- org.mule.transports:mule-transport-ssl:jar:3.3.0:compile
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.3-osgi:compile
+[INFO] |  |  +- commons-httpclient:commons-httpclient:jar:3.1-osgi:compile
+[INFO] |  |  +- tomcat:tomcat-util:jar:5.5.23:compile
+[INFO] |  |  |  \- tomcat:tomcat-apr:jar:5.5.23:compile
+[INFO] |  |  \- org.samba.jcifs:jcifs:jar:1.3.3:compile
+[INFO] |  +- org.mule.transports:mule-transport-servlet:jar:3.3.0:compile
+[INFO] |  +- org.mule.modules:mule-module-cxf:jar:3.3.0:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-core:jar:2.5.1:compile
+[INFO] |  |  |  +- org.apache.cxf:cxf-api:jar:2.5.1:compile
+[INFO] |  |  |  |  +- org.apache.neethi:neethi:jar:3.0.1:compile
+[INFO] |  |  |  |  \- wsdl4j:wsdl4j:jar:1.6.2:compile
+[INFO] |  |  |  +- com.sun.xml.bind:jaxb-impl:jar:2.1.5:compile
+[INFO] |  |  |  \- org.apache.ws.xmlschema:xmlschema-core:jar:2.0.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-frontend-simple:jar:2.5.1:compile
+[INFO] |  |  |  \- org.apache.cxf:cxf-rt-bindings-soap:jar:2.5.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-frontend-jaxws:jar:2.3.0:compile (version managed from 2.5.1)
+[INFO] |  |  |  +- xml-resolver:xml-resolver:jar:1.2:compile
+[INFO] |  |  |  \- org.apache.cxf:cxf-rt-bindings-xml:jar:2.3.0:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-databinding-aegis:jar:2.5.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-databinding-jaxb:jar:2.5.1:compile
+[INFO] |  |  |  \- com.sun.xml.bind:jaxb-xjc:jar:2.2.4-1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-databinding-jibx:jar:2.5.1:compile
+[INFO] |  |  |  +- org.apache.cxf:cxf-tools-common:jar:2.5.1:compile
+[INFO] |  |  |  +- org.jibx:jibx-run:jar:1.2.3:compile
+[INFO] |  |  |  |  \- xpp3:xpp3:jar:1.1.3.4.O:compile
+[INFO] |  |  |  \- org.jibx:jibx-schema:jar:1.2.3:compile
+[INFO] |  |  |     \- org.jibx:jibx-extras:jar:1.2.3:compile
+[INFO] |  |  |        \- org.jdom:jdom:jar:1.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-transports-local:jar:2.5.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-ws-security:jar:2.5.1:compile
+[INFO] |  |  |  +- org.apache.cxf:cxf-common-utilities:jar:2.5.1:compile
+[INFO] |  |  |  \- org.apache.ws.security:wss4j:jar:1.6.4:compile
+[INFO] |  |  |     +- org.apache.santuario:xmlsec:jar:1.4.6:compile
+[INFO] |  |  |     \- org.opensaml:opensaml:jar:2.5.1-1:compile
+[INFO] |  |  |        \- org.opensaml:openws:jar:1.4.2-1:compile
+[INFO] |  |  |           \- org.opensaml:xmltooling:jar:1.3.2-1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-ws-rm:jar:2.5.1:compile
+[INFO] |  |  |  \- org.apache.cxf:cxf-rt-management:jar:2.5.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-ws-addr:jar:2.5.1:compile
+[INFO] |  |  +- org.apache.cxf:cxf-rt-transports-http:jar:2.3.0:compile
+[INFO] |  |  +- org.apache.cxf:cxf-wstx-msv-validation:jar:2.5.1:compile
+[INFO] |  |  |  \- net.java.dev.msv:msv-core:jar:2011.1:compile
+[INFO] |  |  |     +- com.sun.msv.datatype.xsd:xsdlib:jar:2010.1:compile
+[INFO] |  |  |     +- isorelax:isorelax:jar:20030108:compile
+[INFO] |  |  |     \- relaxngDatatype:relaxngDatatype:jar:20020414:compile
+[INFO] |  |  +- com.sun.xml.messaging.saaj:saaj-impl:jar:1.3-osgi:compile
+[INFO] |  |  |  \- javax.xml.soap:saaj-api:jar:1.3:compile
+[INFO] |  |  +- org.mule.modules:mule-module-spring-security:jar:3.3.0:compile
+[INFO] |  |  |  +- org.mule.modules:mule-module-spring-extras:jar:3.3.0:compile
+[INFO] |  |  |  |  +- org.springframework:spring-jdbc:jar:3.2.4.RELEASE:compile (version managed from 3.1.1.RELEASE)
+[INFO] |  |  |  |  +- org.springframework:spring-jms:jar:3.1.1.RELEASE:compile
+[INFO] |  |  |  |  +- org.mule.modules:mule-module-management:jar:3.3.0:compile
+[INFO] |  |  |  |  |  +- mx4j:mx4j-jmx:jar:2.1.1-osgi:compile
+[INFO] |  |  |  |  |  +- mx4j:mx4j-impl:jar:2.1.1-osgi:compile
+[INFO] |  |  |  |  |  +- mx4j:mx4j-tools:jar:2.1.1-osgi:compile
+[INFO] |  |  |  |  |  +- mx4j:mx4j-remote:jar:2.1.1-osgi:compile
+[INFO] |  |  |  |  |  \- com.yourkit:yjp-controller-api-redist:jar:9.0.8:compile
+[INFO] |  |  |  |  \- org.springframework:spring-context-support:jar:3.2.4.RELEASE:compile (version managed from 3.1.1.RELEASE)
+[INFO] |  |  |  +- org.springframework.security:spring-security-core:jar:3.1.0.RELEASE:compile
+[INFO] |  |  |  |  \- org.springframework.security:spring-security-crypto:jar:3.1.0.RELEASE:compile
+[INFO] |  |  |  +- org.springframework.security:spring-security-config:jar:3.1.0.RELEASE:compile
+[INFO] |  |  |  +- org.springframework.security:spring-security-web:jar:3.1.0.RELEASE:compile
+[INFO] |  |  |  |  \- org.springframework:spring-tx:jar:3.2.4.RELEASE:compile
+[INFO] |  |  |  +- org.mortbay.jetty:servlet-api:jar:2.5-20081211:compile
+[INFO] |  |  |  \- org.aspectj:aspectjrt:jar:1.5.4:compile
+[INFO] |  |  +- org.mule.transports:mule-transport-tcp:jar:3.3.0:compile
+[INFO] |  |  +- org.apache.geronimo.specs:geronimo-annotation_1.0_spec:jar:1.1.1:compile
+[INFO] |  |  +- org.springframework:spring-core:jar:3.1.1.RELEASE:compile
+[INFO] |  |  +- javax.mail:mail:jar:1.4.3:compile
+[INFO] |  |  +- javax.xml.ws:jaxws-api:jar:2.2.1:compile
+[INFO] |  |  |  \- javax.jws:jsr181-api:jar:1.0-MR1:compile
+[INFO] |  |  \- org.apache.ant:ant:jar:1.7.0:runtime
+[INFO] |  |     \- org.apache.ant:ant-launcher:jar:1.7.0:runtime
+[INFO] |  +- org.mule.modules:mule-module-jersey:jar:3.3.0:compile
+[INFO] |  |  +- org.mule.patterns:mule-pattern-core:jar:3.3.0:compile
+[INFO] |  |  +- com.sun.jersey:jersey-server:jar:1.6:compile
+[INFO] |  |  |  \- com.sun.jersey:jersey-core:jar:1.6:compile
+[INFO] |  |  +- com.sun.jersey:jersey-json:jar:1.6:compile
+[INFO] |  |  |  \- org.codehaus.jackson:jackson-xc:jar:1.7.1:compile
+[INFO] |  |  +- com.sun.jersey:jersey-client:jar:1.6:compile
+[INFO] |  |  \- org.codehaus.jackson:jackson-jaxrs:jar:1.8.0:compile
+[INFO] |  +- org.mule.transports:mule-transport-jms:jar:3.3.0:compile
+[INFO] |  |  +- org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.1-osgi:compile
+[INFO] |  |  \- org.apache.geronimo.specs:geronimo-j2ee-management_1.0_spec:jar:1.1-osgi:compile
+[INFO] |  +- org.mule.transports:mule-transport-email:jar:3.3.0:compile
+[INFO] |  +- org.mule.transports:mule-transport-jdbc:jar:3.3.0:compile
+[INFO] |  |  +- commons-dbutils:commons-dbutils:jar:1.2:compile
+[INFO] |  |  \- com.experlog:xapool:jar:1.5.0-osgi:compile
+[INFO] |  +- org.mule.transports:mule-transport-quartz:jar:3.3.0:compile
+[INFO] |  |  \- quartz:quartz-all:jar:1.6.6:compile
+[INFO] |  +- org.mule.transports:mule-transport-sftp:jar:3.3.0:compile
+[INFO] |  |  \- com.jcraft:jsch:jar:0.1.44-1:compile
+[INFO] |  +- org.mortbay.jetty:servlet-api-2.5:jar:6.1.11:compile
+[INFO] |  +- org.apache.activemq:activemq-core:jar:5.6.0:compile
+[INFO] |  |  +- org.apache.activemq:kahadb:jar:5.6.0:compile
+[INFO] |  |  +- org.apache.activemq.protobuf:activemq-protobuf:jar:1.1:compile
+[INFO] |  |  +- org.osgi:org.osgi.core:jar:4.1.0:compile
+[INFO] |  |  \- org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar:1.0.1:compile
+[INFO] |  +- org.apache.xbean:xbean-spring:jar:3.9:compile
+[INFO] |  |  \- commons-logging:commons-logging:jar:1.0.3:compile
+[INFO] |  +- org.hornetq:hornetq-core-client:jar:2.2.5.Final:compile
+[INFO] |  +- org.hornetq:hornetq-jms:jar:2.2.5.Final:compile
+[INFO] |  +- org.jboss.netty:netty:jar:3.2.3.Final:compile
+[INFO] |  +- commons-dbcp:commons-dbcp:jar:1.4:compile
+[INFO] |  \- net.sourceforge.jtds:jtds:jar:1.2.4:compile
+[INFO] +- org.soitoolkit.refapps.sd:soitoolkit-refapps-sample-schemas:jar:0.6.1-M2:compile
+[INFO] \- xmlunit:xmlunit:jar:1.1:test
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] nt-parent ......................................... SUCCESS [2.387s]
+[INFO] nt-composite-schemas-test ......................... SUCCESS [0.035s]
+[INFO] nt-composite-schemas-tak .......................... SUCCESS [0.012s]
+[INFO] nt-modules-intsvc ................................. SUCCESS [8.574s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 13.191s
+[INFO] Finished at: Mon Dec 02 15:37:12 CET 2013
+[INFO] Final Memory: 20M/48M
+[INFO] ------------------------------------------------------------------------

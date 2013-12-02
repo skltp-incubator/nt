@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+   xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+
+   <jaxb:bindings> 
+      <jaxb:globalBindings 
+         collectionType="java.util.ArrayList"
+         generateValueClass="true">
+         <jaxb:serializable uid="2" />
+         <jaxb:javaType name="java.util.Date" xmlType="xs:date" 
+			parseMethod="se.skltp.mb.schema.jaxb.DateAdapter.parseDate"
+			printMethod="se.skltp.mb.schema.jaxb.DateAdapter.printDate"
+            hasNsContext="false" /> 
+         <jaxb:javaType name="java.util.Date" xmlType="xs:dateTime" 
+			parseMethod="se.skltp.mb.schema.jaxb.DateTimeAdapter.parseDateTime"
+			printMethod="se.skltp.mb.schema.jaxb.DateTimeAdapter.printDateTime"
+            hasNsContext="false" /> 
+       </jaxb:globalBindings>
+   </jaxb:bindings>
+   
+</jaxb:bindings>
