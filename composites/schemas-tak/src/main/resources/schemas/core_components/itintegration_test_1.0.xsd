@@ -17,14 +17,26 @@
  specific language governing permissions and limitations
  under the License.
  -->
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' targetNamespace='urn:riv:itintegration:test:1'
-           elementFormDefault='qualified' attributeFormDefault='unqualified' version='1.0'>
-  <xs:complexType name='RouteChangeType'>
-    <!-- Contains all consumer and producer logical addresses which have had their routes changed -->
-    <xs:sequence>
-      <xs:element name='changedConsumers' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
-      <xs:element name='changedProducers' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
-      <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded' />
-    </xs:sequence>
-  </xs:complexType>
+<xs:schema
+        xmlns:xs='http://www.w3.org/2001/XMLSchema'
+        xmlns:reg="urn:riv:itintegration:registry:1"
+        targetNamespace='urn:riv:itintegration:test:1'
+        elementFormDefault='qualified'
+        attributeFormDefault='unqualified'
+        version='1.0'>
+    <xs:import schemaLocation='itintegration_registry_1.0.xsd'
+               namespace='urn:riv:itintegration:registry:1'/>
+    <xs:complexType name='RouteChangeType'>
+        <!--
+            Routes associated with the given serviceContract has changed.
+            All consumers and producers which has updated their association with the given serviceContract
+            is listed
+         -->
+        <xs:sequence>
+            <xs:element name='serviceContract' type='reg:ServiceContractType'/>
+            <xs:element name='changedConsumers' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:element name='changedProducers' type='xs:string' minOccurs='0' maxOccurs='unbounded'/>
+            <xs:any namespace='##other' processContents='lax' minOccurs='0' maxOccurs='unbounded'/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
