@@ -15,7 +15,7 @@ public class NtMuleServer {
  
 
 	private static final Logger logger = LoggerFactory.getLogger(NtMuleServer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
+    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-test-config");
 
 	public static void main(String[] args) throws Exception {
 	
@@ -54,5 +54,13 @@ public class NtMuleServer {
 	    logger.info("URL: {}", url);
     	return url;
  
-    }	
+    }
+
+    public static String getProperty(String name) {
+        return rb.getString(name);
+    }
+
+    public static RecursiveResourceBundle getRb() {
+        return rb;
+    }
 }

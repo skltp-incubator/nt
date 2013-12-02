@@ -31,8 +31,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.test.Dispatcher;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationType;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationType;
 import se.skltp.nt.NtMuleServer;
 import se.skltp.nt.intsvc.ReceiveNotificationTestProducer.ReceiveData;
 

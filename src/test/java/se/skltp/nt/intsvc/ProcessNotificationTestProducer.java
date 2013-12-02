@@ -27,10 +27,11 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
-import se.riv.itintegration.engagementindex.ProcessNotification.v1.ProcessNotificationResponderInterface;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationResponseType;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
-import se.riv.itintegration.engagementindex.v1.ResultCodeEnum;
+import se.rivta.itintegration.engagementindex.ProcessNotification.v1.rivtabp21.ProcessNotificationResponderInterface;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationResponseType;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationType;
+import se.rivta.itintegration.engagementindex.v1.ResultCodeEnum;
+import se.skltp.nt.NtMuleServer;
 
 
 @WebService(
@@ -42,7 +43,7 @@ public class ProcessNotificationTestProducer implements ProcessNotificationRespo
     public static final String TEST_SUBJECT_TRIGGER_TIMEOUT = "timeout";
 
     private static final Logger log = LoggerFactory.getLogger(ProcessNotificationTestProducer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
+    private static final RecursiveResourceBundle rb = NtMuleServer.getRb();
     private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.getString("SERVICE_TIMEOUT_MS"));
 
     private void forceTimeout() {

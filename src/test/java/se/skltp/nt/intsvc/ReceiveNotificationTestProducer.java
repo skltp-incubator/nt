@@ -29,9 +29,10 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
-import se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderInterface;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.rivta.itintegration.notification.ReceiveNotification.v1.rivtabp21.ReceiveNotificationResponderInterface;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationResponseType;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationType;
+import se.skltp.nt.NtMuleServer;
 
 @WebService(
         serviceName = "ReceiveNotificationService",
@@ -42,7 +43,7 @@ public class ReceiveNotificationTestProducer implements ReceiveNotificationRespo
     public static final String TEST_SUBJECT_TRIGGER_TIMEOUT = "timeout";
 
     private static final Logger log = LoggerFactory.getLogger(ReceiveNotificationTestProducer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
+    private static final RecursiveResourceBundle rb = NtMuleServer.getRb();
     private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.getString("SERVICE_TIMEOUT_MS"));
 
     private void forceTimeout() {

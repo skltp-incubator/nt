@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>se.rivta.tools</groupId>
+        <artifactId>rivta-parent-pom</artifactId>
+        <version>1.0.3</version>
+    </parent>
+
+    <groupId>se.rivta.itintegration.test</groupId>
+    <artifactId>ServiceContracts_itintegration_test</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+    <name>${artifactId}</name>
+    <url>http://rivta.se</url>
+
+    <properties>
+        <schema.path>${basedir}/schemas</schema.path>
+    </properties>
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceRoot>${generated-sources}</sourceRoot>
+                            <wsdlOptions>
+
+                                <wsdlOption>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        Note: be careful when changing this - must be in sync for all
+                                        schemas generations in this namespace!
+                                        <extraarg>
+                                            urn:riv:itintegration:test:TestProcessTakNotification:1:rivtabp21=se.rivta.itintegration.test.TestProcessTakNotification.v1.rivtabp21
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:notification:1=se.rivta.itintegration.notification.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:test:1=se.rivta.itintegration.test.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:registry:1=se.rivta.itintegration.registry.v1
+                                        </extraarg>
+
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>
+                                            urn:riv:itintegration:test:TestProcessTakNotificationResponder:1=se.rivta.itintegration.test.TestProcessTakNotificationResponder.v1.rivtabp21
+                                        </extraarg>
+                                    </extraargs>
+                                    <wsdl>
+                                        ${schema.path}/interactions/TestProcessTakNotificationInteraction/TestProcessTakNotificationInteraction_1.0_RIVTABP21.wsdl
+                                    </wsdl>
+                                </wsdlOption>
+
+                            </wsdlOptions>
+
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+</project>

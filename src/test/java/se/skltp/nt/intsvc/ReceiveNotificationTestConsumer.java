@@ -21,10 +21,9 @@ package se.skltp.nt.intsvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import se.riv.itintegration.notification.ReceiveNotification.v1.ReceiveNotificationResponderInterface;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationResponseType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
+import se.rivta.itintegration.notification.ReceiveNotification.v1.rivtabp21.ReceiveNotificationResponderInterface;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationResponseType;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationType;
 import se.skltp.nt.NtMuleServer;
 
 public class ReceiveNotificationTestConsumer extends AbstractTestConsumer<ReceiveNotificationResponderInterface> {

@@ -48,6 +48,13 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
     </distributionManagement>
 
     <dependencies>
+
+        <dependency>
+     			<groupId>se.rivta.infrastructure.itintegration</groupId>
+     			<artifactId>ServiceContracts_infrastructure_itintegration_registry</artifactId>
+     			<version>2.0-M6</version>
+   		</dependency>
+
         <dependency>
             <groupId>org.soitoolkit.commons.components</groupId>
             <artifactId>soitoolkit-commons-mule</artifactId>
@@ -68,6 +75,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
             <version>${soitoolkit.version}</version>
             <type>pom</type>
         </dependency>
+
         <dependency>
             <groupId>org.soitoolkit.refapps.sd</groupId>
             <artifactId>soitoolkit-refapps-sample-schemas</artifactId>
@@ -125,22 +133,22 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                                         Note: be careful when changing this - must be in sync for all
                                         schemas generations in this namespace!
                                         <extraarg>
-                                            urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21=se.riv.itintegration.notification.ReceiveNotification.v1
+                                            urn:riv:itintegration:notification:ReceiveNotification:1:rivtabp21=se.rivta.itintegration.notification.ReceiveNotification.v1.rivtabp21
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:notification:1=se.riv.itintegration.notification.v1
+                                            urn:riv:itintegration:notification:1=se.rivta.itintegration.notification.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1
+                                            urn:riv:itintegration:registry:1=se.rivta.itintegration.registry.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:notification:ReceiveNotificationResponder:1=se.riv.itintegration.notification.ReceiveNotificationResponder.v1
+                                            urn:riv:itintegration:notification:ReceiveNotificationResponder:1=se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21
                                         </extraarg>
                                     </extraargs>
                                     <wsdl>
@@ -154,22 +162,22 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
                                         Note: be careful when changing this - must be in sync for all
                                         schemas generations in this namespace!
                                         <extraarg>
-                                            urn:riv:itintegration:engagementindex:ProcessNotification:1:rivtabp21=se.riv.itintegration.engagementindex.ProcessNotification.v1
+                                            urn:riv:itintegration:engagementindex:ProcessNotification:1:rivtabp21=se.rivta.itintegration.engagementindex.ProcessNotification.v1.rivtabp21
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:engagementindex:1=se.riv.itintegration.engagementindex.v1
+                                            urn:riv:itintegration:engagementindex:1=se.rivta.itintegration.engagementindex.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:registry:1=se.riv.itintegration.registry.v1
+                                            urn:riv:itintegration:registry:1=se.rivta.itintegration.registry.v1
                                         </extraarg>
 
                                         <extraarg>-p</extraarg>
                                         <extraarg>
-                                            urn:riv:itintegration:engagementindex:ProcessNotificationResponder:1=se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1
+                                            urn:riv:itintegration:engagementindex:ProcessNotificationResponder:1=se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21
                                         </extraarg>
                                     </extraargs>
                                     <wsdl>

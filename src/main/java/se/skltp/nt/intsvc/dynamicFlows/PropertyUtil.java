@@ -67,10 +67,10 @@ public class PropertyUtil {
 	private static Map<String, Object> resovledProperties = null;
 	private static Map<Integer, Map> agreementsMap = null;
 
-	static public Map<String, Object> getResovledProperties() {
+	static public Map<String, Object> getResolvedProperties() {
     	if (resovledProperties == null) {
     		// FIXME. Inject the name of the property file!
-    		resovledProperties = new PropertyUtil().getResovledProperties("nt-config");
+    		resovledProperties = new PropertyUtil().getResolvedProperties("nt-config");
     	}
 		return resovledProperties;
     }
@@ -79,7 +79,7 @@ public class PropertyUtil {
     	if (agreementsMap == null) {
     		agreementsMap = new HashMap<Integer, Map>();
     		
-    		List<Map> agreementList = (List<Map>)getResovledProperties().get(PARTNER_LIST_NAME);
+    		List<Map> agreementList = (List<Map>) getResolvedProperties().get(PARTNER_LIST_NAME);
     		for (Map agmt : agreementList) {
     			agreementsMap.put((Integer)agmt.get(ID), agmt);
 			}
@@ -89,14 +89,14 @@ public class PropertyUtil {
     }
 
 	static public List<Map> getSuperviseFilesList() {
-		return (List<Map>)getResovledProperties().get(SUPERVISE_FILES_LIST_NAME);
+		return (List<Map>) getResolvedProperties().get(SUPERVISE_FILES_LIST_NAME);
 	}
 
 	static public List<Map> getSupervisemqsList() {
-		return (List<Map>)getResovledProperties().get(SUPERVISE_ACTIVEMQ_LIST_NAME);
+		return (List<Map>) getResolvedProperties().get(SUPERVISE_ACTIVEMQ_LIST_NAME);
 	}
 
-	private Map<String, Object> getResovledProperties(String... bundleNames) {
+	private Map<String, Object> getResolvedProperties(String... bundleNames) {
         RecursiveResourceBundle rb = new RecursiveResourceBundle(bundleNames);
 
         Set<String> keys = (Set)rb.getProperties().keySet();

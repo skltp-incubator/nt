@@ -21,9 +21,9 @@ package se.skltp.nt.intsvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.riv.itintegration.engagementindex.ProcessNotification.v1.ProcessNotificationResponderInterface;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationResponseType;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
+import se.rivta.itintegration.engagementindex.ProcessNotification.v1.rivtabp21.ProcessNotificationResponderInterface;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationResponseType;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationType;
 import se.skltp.nt.NtMuleServer;
 
 public class ProcessNotificationTestConsumer extends AbstractTestConsumer<ProcessNotificationResponderInterface> {

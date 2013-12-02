@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mule
+        xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+        xmlns:http="http://www.mulesoft.org/schema/mule/http"
+        xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+        xmlns="http://www.mulesoft.org/schema/mule/core"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:spring="http://www.springframework.org/schema/beans"
+        xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-current.xsd
+        http://www.mulesoft.org/schema/mule/cxf       http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd 
+
+
+        http://www.mulesoft.org/schema/mule/core      http://www.mulesoft.org/schema/mule/core/current/mule.xsd 
+
+        http://www.mulesoft.org/schema/mule/http      http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+        http://www.mulesoft.org/schema/mule/vm        http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+
+    <spring:beans>
+        <!-- Bean that creates a ProcessNotification request -->
+        <spring:bean name="create-get-logical-addressees-request-bean" class="se.skltp.nt.intsvc.GetLogicalAddresseesByServiceContractRequest">
+            <spring:property name="logicalAddress" value="${VP_HSA_ID}"/>
+        </spring:bean>
+    </spring:beans>
+
+    <flow name="get-logical-addressees-service">
+        <vm:inbound-endpoint
+            address="vm://get-logical-addressees"
+            exchange-pattern="request-response"
+            transformer-refs="logMsgIn"
+            responseTransformer-refs="logRespOut" />
+
+        <component>
+            <spring-object bean="create-get-logical-addressees-request-bean"/>
+        </component>
+
+ 		<set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="${EI_HSA_ID}" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+
+        <http:outbound-endpoint
+            connector-ref="soitoolkit-http-connector"
+            address="${GET_LOGICAL_ADDRESSES_BY_SERVICE_CONTRACT_OUTBOUND_URL}"
+            exchange-pattern="request-response"
+            responseTimeout="${SERVICE_TIMEOUT_MS}"
+            transformer-refs="logReqOut"
+            responseTransformer-refs="logRespIn">
+
+            <cxf:jaxws-client
+                port="GetLogicalAddresseesByServiceContractResponderPort"
+                operation="GetLogicalAddresseesByServiceContract"
+				clientClass="se.rivta.infrastructure.itintegration.registry.getlogicaladdresseesbyservicecontract.v2.rivtabp21.GetLogicalAddresseesByServiceContractResponderService"
+                wsdlLocation="classpath:/ServiceContracts_infrastructure_itintegration_registry/interactions/GetLogicalAddresseesByServiceContractInteraction/GetLogicalAddresseesByServiceContractInteraction_2.0_RIVTABP21.wsdl"
+            />
+        </http:outbound-endpoint>
+
+        <custom-exception-strategy class="org.soitoolkit.commons.mule.error.ServiceExceptionStrategy"/>
+    </flow>
+</mule>

@@ -41,9 +41,10 @@ import org.soitoolkit.commons.mule.test.DispatcherMuleClientImpl;
 import org.soitoolkit.commons.mule.util.MuleUtil;
 import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import org.soitoolkit.commons.mule.util.ValueHolder;
-import se.riv.itintegration.engagementindex.ProcessNotificationResponder.v1.ProcessNotificationType;
-import se.riv.itintegration.notification.ReceiveNotificationResponder.v1.ReceiveNotificationType;
-import se.riv.itintegration.notification.v1.Filter;
+import se.rivta.itintegration.engagementindex.ProcessNotificationResponder.v1.rivtabp21.ProcessNotificationType;
+import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationType;
+import se.rivta.itintegration.notification.v1.Filter;
+import se.skltp.nt.NtMuleServer;
 
 import static org.junit.Assert.*;
 
@@ -57,7 +58,7 @@ public abstract class AbstractTestCase extends org.soitoolkit.commons.mule.test.
     protected static final int EI_TEST_TIMEOUT = 5000;
     protected static final int EI_SHORT_WAITTIME = 500;
 
-    protected static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
+    protected static final RecursiveResourceBundle rb = NtMuleServer.getRb();
     protected static final String INFO_LOG_QUEUE = rb.getString("SOITOOLKIT_LOG_INFO_QUEUE");
     protected static final String ERROR_LOG_QUEUE = rb.getString("SOITOOLKIT_LOG_ERROR_QUEUE");
     protected static final String NOTIFY_TOPIC = rb.getString("NOTIFY_TOPIC");

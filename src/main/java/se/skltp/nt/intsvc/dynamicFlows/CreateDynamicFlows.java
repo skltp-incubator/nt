@@ -34,7 +34,7 @@ public class CreateDynamicFlows  {
     private final Map<String, Object> propertyMap;
     
     public CreateDynamicFlows(List<String> logicalAdresses) {
-        propertyMap = PropertyUtil.getResovledProperties();
+        propertyMap = PropertyUtil.getResolvedProperties();
         propertyMap.put("LOGICAL_ADDRESSES", logicalAdresses);
     }
     
