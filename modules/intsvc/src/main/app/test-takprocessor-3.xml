@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+        xmlns="http://www.mulesoft.org/schema/mule/core"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core    http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<simple-service
+            name="test-process-tak-notification-service-3"
+                  address="${TAKPROCESSOR_3_WEB_SERVICE_URL}?connector=soitoolkit-http-connector"
+                  component-class="se.skltp.nt.intsvc.test.TestTakProcessor"
+                  type="jax-ws" />
+
+</mule>

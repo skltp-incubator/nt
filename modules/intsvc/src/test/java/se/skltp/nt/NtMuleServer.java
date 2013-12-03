@@ -1,6 +1,8 @@
 package se.skltp.nt;
 
 
+import java.lang.reflect.Field;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.test.StandaloneMuleServer;
@@ -15,7 +17,7 @@ public class NtMuleServer {
  
 
 	private static final Logger logger = LoggerFactory.getLogger(NtMuleServer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-test-config");
+    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-test");
 
 	public static void main(String[] args) throws Exception {
 	
@@ -35,6 +37,9 @@ public class NtMuleServer {
         // during testing, we can't rely on a VP to re-route to producers
         CreatePropsAndConvertToStringTransformer.setEndpointPortOverride("8083");
 
+        Field f = muleServer.getClass().getDeclaredField("muleConfig");
+        f.setAccessible(true);
+        logger.info("muleConfig: " + f.get(muleServer));
         // Start the server
 		muleServer.run();
 	}

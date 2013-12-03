@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="test-takprocessor-3">
+    <global-unknown description="false" unknownName="test-process-tak-notification-service-3" index="1" entity-id="global-unknown#1">
+        <content>&lt;simple-service xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; name=&quot;test-process-tak-notification-service-3&quot; address=&quot;${TAKPROCESSOR_3_WEB_SERVICE_URL}?connector=soitoolkit-http-connector&quot; component-class=&quot;se.skltp.nt.intsvc.test.TestTakProcessor&quot; type=&quot;jax-ws&quot;/&gt;</content>
+    </global-unknown>
+</mule-configuration>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="test-takProcessor-1">
+    <flow SubFlow="false" name="test-takProcessor-1Flow1" entity-id="b110bf2c-ee68-4577-851d-5902b16facda">
+        <properties>
+            <property name="processingStrategy"/>
+            <property name="processingStrategy2"/>
+            <property name="initialState"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="auxiliary;index" value="1"/>
+            <property name="tracking:enable-default-events"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="OneWay" name="Generic" type="http://www.mulesoft.org/schema/mule/core/endpoint" entity-id="Generic#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="businessEventsLabel"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs" value="logReqIn"/>
+                    <property name="address" value="${TAKPROCESSOR_2_WEB_SERVICE_URL}"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs" value="logRespOut"/>
+                    <property name="auxiliary;index" value="2"/>
+                    <property name="responseTimeout"/>
+                    <property name="mimeType"/>
+                    <property name="connector-ref" value="soitoolkit-http-connector"/>
+                </properties>
+            </endpoint>
+            <pattern name="SOAP" type="http://www.mulesoft.org/schema/mule/cxf/soapComponent" entity-id="SOAP#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="port"/>
+                    <property name="wsdlLocation" value="classpath:/schemas/interactions/TestProcessTakNotificationInteraction/TestProcessTakNotificationInteraction_1.0_RIVTABP21.wsdl"/>
+                    <property name="serviceClass" value="se.skltp.nt.intsvc.test.TestTakProcessor"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/cxf/jaxws-service"/>
+                    <property name="configuration-ref"/>
+                    <property name="namespace" value="urn:riv:itintegration:test:TestProcessTakNotification:1:rivtabp21"/>
+                    <property name="validationEnabled"/>
+                    <property name="bindingId"/>
+                    <property name="onException"/>
+                    <property name="service"/>
+                    <property name="mtomEnabled"/>
+                    <property name="soapVersion"/>
+                    <property name="enableMuleSoapHeaders"/>
+                    <property name="auxiliary;index" value="3"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <description>Acts as a TestProcessTakNotification producer for testing</description>
+</mule-configuration>

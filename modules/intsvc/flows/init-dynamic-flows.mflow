@@ -2,25 +2,25 @@
 <mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="init-dynamic-flows">
     <global-element name="Bean" type="http://www.springframework.org/schema/beans/bean" entity-id="Bean#1">
         <properties>
-            <property name="factory-bean"/>
-            <property name="abstract"/>
-            <property name="scope"/>
-            <property name="init-method"/>
-            <property name="autowire-candidate"/>
-            <property name="factory-method"/>
-            <property name="class" value="se.skltp.nt.intsvc.dynamicFlows.Initializer"/>
-            <property name="parent"/>
-            <property name="children"/>
-            <property name="lazy-init"/>
-            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
             <property name="id" value="initializer"/>
             <property name="name"/>
-            <property name="primary"/>
+            <property name="class" value="se.skltp.ei.intsvc.dynamicFlows.Initializer"/>
+            <property name="parent"/>
+            <property name="scope"/>
+            <property name="children"/>
+            <property name="abstract"/>
+            <property name="lazy-init"/>
             <property name="autowire"/>
-            <property name="destroy-method"/>
-            <property name="auxiliary;wrapIn" value="1"/>
-            <property name="auxiliary;index" value="2"/>
             <property name="depends-on"/>
+            <property name="autowire-candidate"/>
+            <property name="primary"/>
+            <property name="init-method"/>
+            <property name="destroy-method"/>
+            <property name="factory-method"/>
+            <property name="factory-bean"/>
+            <property name="auxiliary;index" value="2"/>
+            <property name="auxiliary;wrapIn" value="1"/>
+            <property name="auxiliary;wrappedIn" value="beans@spring@http://www.springframework.org/schema/beans"/>
         </properties>
     </global-element>
 </mule-configuration>
