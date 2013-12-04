@@ -1,4 +1,4 @@
-package se.skltp.nt.intsvc;
+package se.skltp.nt.intsvc.subscriber.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +20,7 @@ import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontrac
 import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontractsresponder.v2.GetSupportedServiceContractsResponseType;
 import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontractsresponder.v2.GetSupportedServiceContractsType;
 import se.rivta.infrastructure.itintegration.registry.v2.ServiceContractNamespaceType;
+import se.skltp.nt.intsvc.subscriber.SubscriberDatabase;
 
 /**
  * Wraps the TAK-information for routing.
@@ -28,38 +29,16 @@ import se.rivta.infrastructure.itintegration.registry.v2.ServiceContractNamespac
  *
  * @author mats.olsson@callistaenterprise.se
  */
-public class SubscriberDatabase {
+public class SubscriberDatabaseImpl implements SubscriberDatabase {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscriberDatabase.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscriberDatabaseImpl.class);
 
-    public static final SubscriberDatabase INSTANCE = new SubscriberDatabase();
     private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
-
-    public static SubscriberDatabase getInstance() {
-        return INSTANCE;
-    }
 
     private HashMap<String, Map<String, Subscriber>> subscriberMap = new HashMap<String, Map<String, Subscriber>>();
     private Set<String> logicalAddressSet = new HashSet<String>();
 
-    private SubscriberDatabase() {
-    }
-
-    /**
-     * Return true if the given subscriber (identified by logical address) subscribes to the message identified
-     * by the (serviceContractUri, serviceDomain, categorization) flow.
-     * <p/>
-     * The filtering is done by steps; ie the subscriber must subscribe to the serviceContractUri, then we
-     * check the serviceDomain, then we check the categorization (per serviceDomain).
-     * <p/>
-     * ANY is indicated by having an empty serviceDomain and/or categorization.
-     *
-     * @param subscribersLogicalAddress the subscriber, identified by his logical address
-     * @param serviceContractUri        identifies the service contract
-     * @param serviceDomain             identifies first filter parameter (name is from TAK)
-     * @param categorization            identifiest second filter parameter (name is from TAK)
-     * @return true if the subscriber subscribes to the message
-     */
+    @Override
     public boolean subscribesTo(String subscribersLogicalAddress, String serviceContractUri, String serviceDomain, String categorization) {
         if ( log.isDebugEnabled() ) {
             log.debug("subscribesTo('" + subscribersLogicalAddress + "', '" + serviceContractUri + "', '" + serviceDomain + "', '" + categorization + "')");
@@ -93,10 +72,9 @@ public class SubscriberDatabase {
      * @param serviceContractUri to load subscribers for
      */
     private void loadSubscribersFor(String serviceContractUri) {
-        String ourOwnLogicalAddress = rb.getString("NT_LOGICAL_ADDRESS");
+        String ourOwnLogicalAddress = rb.getString("NT_SERVICECONSUMER_HSAID");
 
         subscriberMap.put(serviceContractUri, new HashMap<String, Subscriber>());
-        Set<String> originalLogicalAddresses = new HashSet<String>(logicalAddressSet);
 
         // note the weird naming in the service contract - multiples are named in singular
         // the problem is the xsd-notation and the xml; it looks good there but shitty when
@@ -126,84 +104,91 @@ public class SubscriberDatabase {
                 }
             }
         }
-
-        // check if we have new subscribers
-        Set<String> newLogicalAddresses = new HashSet<String>(logicalAddressSet);
-
-        newLogicalAddresses.removeAll(originalLogicalAddresses);
-        for ( String newLogicalAddress : newLogicalAddresses ) {
-            if (log.isInfoEnabled()) {
-                log.info("Adding new subscriber queue " + newLogicalAddress + " for service contract " + serviceContractUri);
-            }
-            createNewSubscriberFlow(newLogicalAddress);
-        }
-    }
-
-    /**
-     * Create a new subscriber flow.
-     *
-     * @param newLogicalAddress
-     */
-    private void createNewSubscriberFlow(String newLogicalAddress) {
-        // we must be called before we start
     }
 
     protected GetLogicalAddresseesByServiceContractResponseType getLogicalAddresses(String serviceContractUri) {
-        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
         String getLogicalAddressWsdlUrl = rb.getString("GET_LOGICAL_ADDRESSEES_WSDL_URL");
-        String ntLogicalAddress = rb.getString("NT_LOGICAL_ADDRESS");
+        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
+        String ntHsaId = rb.getString("NT_SERVICECONSUMER_HSAID");
 
         GetLogicalAddresseesByServiceContractType params = new GetLogicalAddresseesByServiceContractType();
-        params.setServiceConsumerHsaId(ntLogicalAddress);
+        params.setServiceConsumerHsaId(ntHsaId);
         ServiceContractNamespaceType ns = new ServiceContractNamespaceType();
         ns.setServiceContractNamespace(serviceContractUri);
         params.setServiceContractNameSpace(ns);
         try {
             URL url = new URL(getLogicalAddressWsdlUrl);
             GetLogicalAddresseesByServiceContractResponderInterface port = new GetLogicalAddresseesByServiceContractResponderService(url).getGetLogicalAddresseesByServiceContractResponderPort();
-            Map<String, Object> requestContext = ((BindingProvider) port).getRequestContext();
-            Map<String, Object> msgContext = (Map<String, Object>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
-            if (msgContext == null) {
-                msgContext = new HashMap<String, Object>();
-                requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, msgContext);
-            }
-            msgContext.put("x-rivta-original-serviceconsumer-hsaid", Collections.singletonList(vpLogicalAddress));
+            setOriginalConsumerId(ntHsaId, ((BindingProvider) port).getRequestContext());
             return port.getLogicalAddresseesByServiceContract(vpLogicalAddress, params);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
 
+
+
     protected GetSupportedServiceContractsResponseType getSupportedContracts(String logicalAddress) {
-        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
-        String ntLogicalAddress = rb.getString("NT_LOGICAL_ADDRESS");
         String getSupportedContractsWsdlUrl = rb.getString("GET_SUPPORTED_CONTACTS_WSDL_URL");
+        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
+        String ntHsaId = rb.getString("NT_SERVICECONSUMER_HSAID");
 
         GetSupportedServiceContractsType params = new GetSupportedServiceContractsType();
-        params.setLogicalAdress(vpLogicalAddress);
-        params.setServiceConsumerHsaId(ntLogicalAddress);
+        params.setLogicalAdress(logicalAddress);
         try {
             URL url = new URL(getSupportedContractsWsdlUrl);
             GetSupportedServiceContractsResponderInterface port = new GetSupportedServiceContractsResponderService(url).getGetSupportedServiceContractsResponderPort();
-            Map<String, Object> requestContext = ((BindingProvider) port).getRequestContext();
-            Map<String, Object> msgContext = (Map<String, Object>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
-            if (msgContext == null) {
-                msgContext = new HashMap<String, Object>();
-                requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, msgContext);
-            }
-            msgContext.put("x-rivta-original-serviceconsumer-hsaid", Collections.singletonList(vpLogicalAddress));
+            setOriginalConsumerId(ntHsaId, ((BindingProvider) port).getRequestContext());
             return port.getSupportedServiceContracts(vpLogicalAddress, params);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Set<String> getAllSubscriberLogicalAddresses() {
-        return new HashSet<String>(logicalAddressSet);
-
+    private void setOriginalConsumerId(String ntHsaId, Map<String, Object> requestContext) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> msgContext = (Map<String, Object>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
+        if (msgContext == null) {
+            msgContext = new HashMap<String, Object>();
+            requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, msgContext);
+        }
+        msgContext.put("x-rivta-original-serviceconsumer-hsaid", Collections.singletonList(ntHsaId));
     }
 
-    private class Subscriber {
+    @Override
+    public Set<String> getAllSubscriberLogicalAddresses() {
+        return new HashSet<String>(logicalAddressSet);
+    }
+
+    /**
+     * Reload the subscriber database from the TAK services.
+     */
+    @Override
+    public void reload() {
+        String ntLogicalAddress = SubscriberDatabaseImpl.rb.getString("NT_SERVICECONSUMER_HSAID");
+        GetSupportedServiceContractsResponseType supportedContracts = getSupportedContracts(ntLogicalAddress);
+        List<ServiceContractNamespaceType> contracts = supportedContracts.getServiceContractNamespace();
+        for ( ServiceContractNamespaceType contract : contracts ) {
+            String serviceContractNs = contract.getServiceContractNamespace();
+            String prefix1 = "urn:riv:infrastructure:itintegration:registry:GetSupportedServiceContracts";
+            String prefix2 = "urn:riv:infrastructure:itintegration:registry:GetLogicalAddresseesByServiceContract";
+            if (serviceContractNs.startsWith(prefix1) || serviceContractNs.startsWith(prefix2)) {
+                if (log.isInfoEnabled()) {
+                    log.info("Reload: skipping internal contract " + serviceContractNs);
+                }
+            } else {
+                if (log.isInfoEnabled()) {
+                    log.info("Reload: checking contract " + serviceContractNs);
+                }
+                loadSubscribersFor(serviceContractNs);
+            }
+        }
+        if (log.isInfoEnabled()) {
+            describe();
+        }
+    }
+
+    protected class Subscriber {
         private String logicalAddress;
         private Map<String, ServiceDomain> serviceDomains = new HashMap<String, ServiceDomain>();
 
@@ -222,6 +207,14 @@ public class SubscriberDatabase {
                 subscribers.put(logicalAddress, subscriber);
             }
             subscriber.add(serviceDomain, category);
+        }
+
+        @Override
+        public String toString() {
+            return "Subscriber{" +
+                    logicalAddress +
+                    ", filter=" + serviceDomains +
+                    '}';
         }
 
         private void add(String serviceDomain, String category) {
@@ -275,6 +268,11 @@ public class SubscriberDatabase {
             this.serviceDomain = serviceDomain;
         }
 
+        @Override
+        public String toString() {
+            return String.valueOf(categorizations);
+        }
+
         public boolean allow(String categorization) {
             if ( categorization == null || categorization.length() == 0 ) {
                 // no categorization given, accept
@@ -305,32 +303,20 @@ public class SubscriberDatabase {
         }
     }
 
-
-    private static final String RECEIVE_NOTIFICATION_URI = "urn:riv:itintegration:notification:ReceiveNotificationResponder:1";
-    private static final String PROCESS_NOTIFICATION_URI = "urn:riv:itintegration:engagementindex:ProcessNotificationResponder:1";
-
-    {
-        // Foo-1 is specialized to domain and category
-        new Subscriber("Foo-1", RECEIVE_NOTIFICATION_URI, "domain-1", "category-1");
-        new Subscriber("Foo-1", PROCESS_NOTIFICATION_URI, "domain-1", "category-1");
-        // Foo-2 is specialized to domain only
-        new Subscriber("Foo-2", RECEIVE_NOTIFICATION_URI, "domain-1", null);
-        new Subscriber("Foo-2", PROCESS_NOTIFICATION_URI, "domain-1", null);
-        // Foo-3 ignores filtering completly
-        new Subscriber("Foo-3", PROCESS_NOTIFICATION_URI, null, null);
-        new Subscriber("Foo-3", RECEIVE_NOTIFICATION_URI, null, null);
-    }
-
-    public static void main(String[] args) {
-        SubscriberDatabase db = SubscriberDatabase.getInstance();
-        String ntLogicalAddress = SubscriberDatabase.rb.getString("NT_LOGICAL_ADDRESS");
-        GetSupportedServiceContractsResponseType supportedContracts = db.getSupportedContracts(ntLogicalAddress);
-        List<ServiceContractNamespaceType> contracts = supportedContracts.getServiceContractNamespace();
-        for ( ServiceContractNamespaceType contract : contracts ) {
-            String serviceContractNs = contract.getServiceContractNamespace();
-            db.loadSubscribersFor(serviceContractNs);
+    public void describe() {
+        log.info("Subscriber database:");
+        for ( Map.Entry<String, Map<String, Subscriber>> entry : subscriberMap.entrySet() ) {
+            String contract = entry.getKey();
+            log.info("tk  : " + contract);
+            for ( Map.Entry<String, Subscriber> subscriberEntry : entry.getValue().entrySet() ) {
+                log.info("        " + subscriberEntry.getValue());
+            }
         }
     }
 
-
+    public static void main(String[] args) {
+        SubscriberDatabaseImpl db = new SubscriberDatabaseImpl();
+        db.reload();
+        db.describe();
+    }
 }

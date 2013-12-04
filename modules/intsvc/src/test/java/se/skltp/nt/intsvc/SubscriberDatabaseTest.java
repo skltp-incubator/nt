@@ -9,7 +9,7 @@ package se.skltp.nt.intsvc;
  * So we need a logical address for Notification and a couple of contracts that it is supposed
  * to produce.
  * <p/>
- * To avoid confusion, we do not want Notification to produce ProcessNotificatin (as
+ * To avoid confusion, we do not want Notification to produce ProcessNotification (as
  * that would cause us to receive ProcessNotification from any EI-testing going on).
  * <p/>
  * So lets come up with a couple of fake service contracts (TestProcessTakNotification, TestProcessEiNotification)

@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import se.skltp.nt.intsvc.SubscriberDatabase;
+import se.skltp.nt.intsvc.subscriber.impl.SubscriberDatabaseImpl;
 
 //import riv.itintegration.registry.getlogicaladdresseesbyservicecontractresponder._1.GetLogicalAddresseesByServiceContractResponseType;
 
@@ -62,7 +62,7 @@ public class Initializer implements ApplicationContextAware, MuleContextNotifica
 		this.applicationContext = applicationContext;
 	}
 
-	static boolean starting = false;
+    static boolean starting = false;
 	static boolean stopping = false;
 	
 	private MuleContext dynamicContext;
@@ -94,9 +94,12 @@ public class Initializer implements ApplicationContextAware, MuleContextNotifica
 //				add(flowConfigs);
 //
 //				log.info("{} flows started", flowConfigs.size());
-				
-				
-				List<String> logicalAdresses = new ArrayList<String>(SubscriberDatabase.getInstance().getAllSubscriberLogicalAddresses());
+
+
+                SubscriberDatabaseImpl subscriberDatabase = notification.getMuleContext().getRegistry().get("subscriber-database-bean");
+                subscriberDatabase.reload();
+				List<String> logicalAdresses = new ArrayList<String>(subscriberDatabase.getAllSubscriberLogicalAddresses());
+                log.info("subscriberDatabase " + subscriberDatabase.getClass().getName() + " loaded " + logicalAdresses.size() + " subscribers");
 
 				List<String> flowConfigs = new CreateDynamicFlows(logicalAdresses).getContextConfiguration();
 //

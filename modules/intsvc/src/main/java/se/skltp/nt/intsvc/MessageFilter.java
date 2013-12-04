@@ -3,9 +3,9 @@ package se.skltp.nt.intsvc;
 import java.util.Map;
 
 import org.mule.el.context.MessageContext;
-import org.mule.util.store.DefaultObjectStoreFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.skltp.nt.intsvc.subscriber.SubscriberDatabase;
 
 /**
  * Filter the message.
@@ -18,10 +18,10 @@ public class MessageFilter {
 
     private static final Logger log = LoggerFactory.getLogger(MessageFilter.class);
 
-    DefaultObjectStoreFactoryBean bean;
-    {
-        DefaultObjectStoreFactoryBean.createDefaultInMemoryQueueStore();
-        bean.createDefaultInMemoryQueueStore();
+    private SubscriberDatabase subscriberDatabase;
+
+    public void setSubscriberDatabase(SubscriberDatabase subscriberDatabase) {
+        this.subscriberDatabase = subscriberDatabase;
     }
 
     public boolean allows(String logicalAddress, MessageContext message) {
@@ -29,7 +29,7 @@ public class MessageFilter {
         String serviceContractUri = getRequired(inProps, "NT_SERVICE_CONTRACT_URI");
         String serviceDomain = getRequired(inProps, "NT_SERVICE_DOMAIN");
         String categorization = getRequired(inProps, "NT_CATEGORIZATION");
-        return SubscriberDatabase.getInstance().subscribesTo(logicalAddress, serviceContractUri, serviceDomain, categorization);
+        return subscriberDatabase.subscribesTo(logicalAddress, serviceContractUri, serviceDomain, categorization);
     }
 
     private String getRequired(Map<String, Object> inProps, String property) {

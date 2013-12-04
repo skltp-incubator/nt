@@ -170,5 +170,7 @@ that supports decrypting encrypted property values -->
     </custom-transformer>
 
     <!-- TODO: Add global definitions here -->
-
+    <!-- Subscriber  -->
+   	<spring:bean id="subscriber-database-bean" class="${SUBSCRIBER_DATABASE_CLASS}">
+   	</spring:bean>
 </mule>

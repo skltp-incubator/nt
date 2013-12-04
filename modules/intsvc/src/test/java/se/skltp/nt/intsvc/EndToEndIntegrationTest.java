@@ -46,7 +46,7 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
 
     private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.getString("SERVICE_TIMEOUT_MS"));
 
-    private static final String LOGICAL_ADDRESS = rb.getString("NT_HSA_ID");
+    private static final String LOGICAL_ADDRESS = rb.getString("NT_SERVICECONSUMER_HSAID");
 
     @SuppressWarnings("unused")
     private static final String EXPECTED_ERR_TIMEOUT_MSG = "Read timed out";
@@ -129,21 +129,22 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
         assertQueueDepth(ERROR_LOG_QUEUE, 0);
 
         // Expect  info entries?
-        assertQueueDepth(INFO_LOG_QUEUE, 48);
+        assertQueueDepth(INFO_LOG_QUEUE, 56);
 
         List<ReceiveNotificationTestProducer.ReceiveData> recNotMessages = ReceiveNotificationTestProducer.getReceiveDataList();
 
         Map<String, Integer> recMsgCount = new HashMap<String, Integer>();
-        assertEquals(14, recNotMessages.size());
+        assertEquals(21, recNotMessages.size());
         for ( ReceiveData data : recNotMessages ) {
             Integer count = recMsgCount.get(data.logicalAddress);
             count = (count == null ? 1 : count + 1);
             recMsgCount.put(data.logicalAddress, count);
         }
-        assertEquals(3, recMsgCount.size());
+        assertEquals(4, recMsgCount.size());
         assertEquals(3, (int) recMsgCount.get("Foo-1")); // gets only domain-1, cat-1 -> 3
         assertEquals(4, (int) recMsgCount.get("Foo-2")); // gets only domain-1, any cat -> 4
         assertEquals(7, (int) recMsgCount.get("Foo-3")); // gets every message -> 7
+        assertEquals(7, (int) recMsgCount.get("Foo-4")); // gets all receive notification messages -> 7
 
         List<ProcessNotificationTestProducer.ReceiveData> procNotMessages = ProcessNotificationTestProducer.getReceiveDataList();
 
@@ -158,6 +159,7 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
         assertEquals(1, (int) procMsgCount.get("Foo-1"));
         assertEquals(1, (int) procMsgCount.get("Foo-2"));
         assertEquals(1, (int) procMsgCount.get("Foo-3"));
+        assertEquals(null, procMsgCount.get("Foo-4"));
 
     }
 

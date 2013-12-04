@@ -81,9 +81,9 @@
 		<level value="INFO" />
 	</logger>
 
-    <!-- Set to debug to see filtering -->
+    <!-- Set to debug to see filtering and adding of subscribers -->
     <logger name="se.skltp.nt.intsvc.subscriber.impl.SubscriberDatabaseImpl">
-   		<level value="DEBUG" />
+   		<level value="INFO" />
    	</logger>
 
     <!-- set to debug to see property extraction -->
@@ -94,10 +94,11 @@
 	<root>
 		<priority value="WARN" />
 
+        <!--
 		<appender-ref ref="CONSOLE" />
-		<!--
-		<appender-ref ref="ROLLINGFILE"/>
 		-->
-		
+
+		<appender-ref ref="ROLLINGFILE"/>
+
 	</root>
 </log4j:configuration>

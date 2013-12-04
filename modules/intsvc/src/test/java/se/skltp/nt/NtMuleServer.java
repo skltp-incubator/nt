@@ -17,7 +17,7 @@ public class NtMuleServer {
  
 
 	private static final Logger logger = LoggerFactory.getLogger(NtMuleServer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-test");
+    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-override");
 
 	public static void main(String[] args) throws Exception {
 	

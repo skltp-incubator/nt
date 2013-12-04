@@ -38,6 +38,7 @@
 <% LOGICAL_ADDRESSES.each { LOGICAL_ADDRESS -> %>
     <spring:beans>
         <spring:bean id="filter" class="se.skltp.nt.intsvc.MessageFilter">
+            <spring:property name="subscriberDatabase" ref="subscriber-database-bean"/>
         </spring:bean>
     </spring:beans>
 
