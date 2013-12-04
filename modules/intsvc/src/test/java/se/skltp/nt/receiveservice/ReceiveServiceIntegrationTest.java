@@ -11,22 +11,22 @@ import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivta
 
 import static se.skltp.nt.NtMuleServer.getAddress;
 
- 
-public class ReceiveServiceIntegrationTest extends AbstractTestCase {
- 
-	
-	private static final Logger log = LoggerFactory.getLogger(ReceiveServiceIntegrationTest.class);
-	
- 
-	private static final String EXPECTED_ERR_TIMEOUT_MSG = "Read timed out";
- 
 
-	private static final String DEFAULT_SERVICE_ADDRESS = getAddress("NT-SERVICES_INBOUND_URL");
- 
- 
-	private static final String ERROR_LOG_QUEUE = "SOITOOLKIT.LOG.ERROR";
-	private AbstractJmsTestUtil jmsUtil = null;
- 
+public class ReceiveServiceIntegrationTest extends AbstractTestCase {
+
+
+    private static final Logger log = LoggerFactory.getLogger(ReceiveServiceIntegrationTest.class);
+
+
+    private static final String EXPECTED_ERR_TIMEOUT_MSG = "Read timed out";
+
+
+    private static final String DEFAULT_SERVICE_ADDRESS = getAddress("NT-SERVICES_INBOUND_URL");
+
+
+    private static final String ERROR_LOG_QUEUE = "SOITOOLKIT.LOG.ERROR";
+    private AbstractJmsTestUtil jmsUtil = null;
+
 
     public ReceiveServiceIntegrationTest() {
         // Only start up Mule once to make the tests run faster...
@@ -34,40 +34,41 @@ public class ReceiveServiceIntegrationTest extends AbstractTestCase {
         setDisposeContextPerClass(true);
     }
 
-	protected String getConfigResources() {
-		return "soitoolkit-mule-jms-connector-activemq-embedded.xml," + 
-  
-		"nt-common.xml," +
-        "receive-service.xml"; /*+
+    protected String getConfigResources() {
+        return "soitoolkit-mule-jms-connector-activemq-embedded.xml," +
+                "nt-common.xml," +
+                "receive-service.xml"; /*+
 		"teststub-services/init-dynamic-flows.xml," +
 	    "teststub-services/receive-notification-teststub-service.xml";*/
     }
 
     @Override
-	protected void doSetUp() throws Exception {
-		super.doSetUp();
+    protected void doSetUp() throws Exception {
+        super.doSetUp();
 
-		doSetUpJms();
-  
-     }
+        doSetUpJms();
 
-	private void doSetUpJms() {
-		// TODO: Fix lazy init of JMS connection et al so that we can create jmsutil in the declaration
-		// (The embedded ActiveMQ queue manager is not yet started by Mule when jmsutil is delcared...)
-		if (jmsUtil == null) jmsUtil = new ActiveMqJmsTestUtil();
-		
- 
-		// Clear queues used for error handling
-		jmsUtil.clearQueues(ERROR_LOG_QUEUE);
+    }
+
+    private void doSetUpJms() {
+        // TODO: Fix lazy init of JMS connection et al so that we can create jmsutil in the declaration
+        // (The embedded ActiveMQ queue manager is not yet started by Mule when jmsutil is delcared...)
+        if ( jmsUtil == null ) {
+            jmsUtil = new ActiveMqJmsTestUtil();
+        }
+
+
+        // Clear queues used for error handling
+        jmsUtil.clearQueues(ERROR_LOG_QUEUE);
     }
 
 
     @Test
     @Ignore // can't run this test; the test is dependent on MULE_ENDPOINT being an inbound property
     public void test_ok() {
-    	ReceiveServiceTestConsumer consumer = new ReceiveServiceTestConsumer(DEFAULT_SERVICE_ADDRESS);
-		ReceiveNotificationResponseType response = consumer.callService("Foo-1", "subj-1", "cat-1");
-	}
- 
+        ReceiveServiceTestConsumer consumer = new ReceiveServiceTestConsumer(DEFAULT_SERVICE_ADDRESS);
+        ReceiveNotificationResponseType response = consumer.callService("Foo-1", "subj-1", "cat-1");
+    }
+
 
 }

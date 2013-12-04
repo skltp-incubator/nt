@@ -70,7 +70,7 @@ public class PropertyUtil {
 	static public Map<String, Object> getResolvedProperties() {
     	if (resovledProperties == null) {
     		// FIXME. Inject the name of the property file!
-    		resovledProperties = new PropertyUtil().getResolvedProperties("nt-config");
+    		resovledProperties = new PropertyUtil().getResolvedProperties("nt-config", "nt-config-override");
     	}
 		return resovledProperties;
     }

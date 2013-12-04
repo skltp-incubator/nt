@@ -58,12 +58,10 @@
 		<level value="INFO" />
 	</logger>
 
-    <!-- Message logging using the old Mule <logger/> - element -->
     <logger name="org.mule.api.processor.LoggerMessageProcessor">
         <level value="INFO" />
     </logger>
 
-    <!-- Message logging using the old Mule <log-component/> - element -->
     <logger name="org.mule.component.simple.LogComponent">
         <level value="INFO" />
     </logger>
@@ -72,12 +70,12 @@
 		<level value="INFO" />
 	</logger>
 	
-	<logger name="se.skltp.nt">
+
+	<logger name="org.soitoolkit.commons.mule.messageLogger">
 		<level value="INFO" />
 	</logger>
 
-    <!-- Message logging using soi-toolkit LogTransformer class -->
-	<logger name="org.soitoolkit.commons.mule.messageLogger">
+	<logger name="se.skltp.nt">
 		<level value="INFO" />
 	</logger>
 
@@ -91,8 +89,9 @@
    		<level value="INFO" />
    	</logger>
 
+
 	<root>
-		<priority value="WARN" />
+		<priority value="INFO" />
 
         <!--
 		<appender-ref ref="CONSOLE" />

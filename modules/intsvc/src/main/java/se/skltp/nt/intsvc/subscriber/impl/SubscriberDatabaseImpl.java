@@ -33,7 +33,7 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberDatabaseImpl.class);
 
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config");
+    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-override");
 
     private HashMap<String, Map<String, Subscriber>> subscriberMap = new HashMap<String, Map<String, Subscriber>>();
     private Set<String> logicalAddressSet = new HashSet<String>();
