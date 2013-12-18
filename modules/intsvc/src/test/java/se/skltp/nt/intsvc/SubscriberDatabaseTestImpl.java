@@ -1,6 +1,6 @@
 package se.skltp.nt.intsvc;
 
-import se.skltp.nt.intsvc.subscriber.impl.SubscriberDatabaseImpl;
+import se.skltp.nt.intsvc.impl.SubscriberDatabaseImpl;
 
 /**
  * Initialize the database properly
@@ -24,7 +24,7 @@ public class SubscriberDatabaseTestImpl extends SubscriberDatabaseImpl {
         // Foo-2 is specialized to domain only
         new Subscriber("Foo-2", RECEIVE_NOTIFICATION_URI, "domain-1", null);
         new Subscriber("Foo-2", PROCESS_NOTIFICATION_URI, "domain-1", null);
-        // Foo-3 ignores filtering completly
+        // Foo-3 ignores filtering completely
         new Subscriber("Foo-3", PROCESS_NOTIFICATION_URI, null, null);
         new Subscriber("Foo-3", RECEIVE_NOTIFICATION_URI, null, null);
         // Foo-4 subscribes only to receive notification

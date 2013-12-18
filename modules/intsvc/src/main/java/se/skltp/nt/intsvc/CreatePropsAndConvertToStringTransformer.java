@@ -11,6 +11,8 @@ import org.mule.transformer.AbstractMessageTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.util.XmlUtil;
+import se.skltp.nt.svc.ConfigProperties;
+import se.skltp.nt.svc.StringUtil;
 
 /**
  * Analyze the message and store extracted data in outbound properties.
@@ -36,11 +38,13 @@ public class CreatePropsAndConvertToStringTransformer extends AbstractMessageTra
     private static final QName QNAME_CATEGORIZATION = new QName(NT_NS, "categorization");
 
     private static final Logger log = LoggerFactory.getLogger(CreatePropsAndConvertToStringTransformer.class);
-    // support testing; in deployment, you would have VP doing routing on the logicalAddress so
-    // you would call back to the identical endpoint that you are being called on. But during testing,
-    // there is no VP so you need to make the call to another port (the host will always be localhost
-    // during testing).
-    private static String portOverride = null;
+
+    // spring injection
+    private ConfigProperties configProperties;
+
+    public void setConfigProperties(ConfigProperties configProperties) {
+        this.configProperties = configProperties;
+    }
 
     @Override
     public Object transformMessage(MuleMessage message, String encoding) throws TransformerException {
@@ -54,7 +58,7 @@ public class CreatePropsAndConvertToStringTransformer extends AbstractMessageTra
             message.setPayload(XmlUtil.convertXMLStreamReaderToString(reader, encoding));
 
             handleExtractedProperties(message, extractor);
-            handleEndpointAddress(message);
+            handleEndpointAddress(message, extractor);
 
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
@@ -64,7 +68,7 @@ public class CreatePropsAndConvertToStringTransformer extends AbstractMessageTra
     }
 
     private void handleExtractedProperties(MuleMessage message, Extractor extractor) {
-        if (log.isDebugEnabled()) log.debug("Extracted tk '" + extractor.getServiceContractUri() +
+        if ( log.isDebugEnabled() ) log.debug("Extracted tk '" + extractor.getServiceContractUri() +
                 "', action '" + extractor.getServiceContractAction() +
                 "', serviceDomain '" + extractor.getServiceDomain() +
                 "', categorization '" + extractor.getCategorization() +
@@ -78,35 +82,51 @@ public class CreatePropsAndConvertToStringTransformer extends AbstractMessageTra
         message.setOutboundProperty("NT_SOAP_ACTION", extractor.getSoapAction());
     }
 
-    private void handleEndpointAddress(MuleMessage message) {
-        String muleEndpoint = message.getInboundProperty("MULE_ENDPOINT");
-        if (log.isDebugEnabled()) log.debug("endpoint " + muleEndpoint);
-        String[] parts = muleEndpoint.split("/");
-        String[] hostParts = parts[2].split(":");
-        String host = hostParts[0];
-        String port = hostParts[1];
-        // Support port override for non-VP testing
-        if ( portOverride != null ) {
-            if (log.isDebugEnabled()) log.debug("port override, changing port from " + port + " to " + portOverride);
-            port = portOverride;
+    private void handleEndpointAddress(MuleMessage message, Extractor extractor) {
+        // spit VP_BASE_URL into host, port and pathBase. We expect the VP_BASE_URL to match the pattern
+        // <http-part>:<host-part>:<port>[/<pathBase-with-no-colons>]
+        String url = configProperties.get("VP_BASE_URL");
+        String[] parts = url.split(":");
+        if ( parts.length != 3 ) {
+            throw new IllegalArgumentException("VP_BASE_URL[" + url + "] must contain exactly two ':'!");
         }
-        StringBuilder sb = new StringBuilder();
-        for ( int i = 3; i < parts.length; i++ ) {
-            String part = parts[i];
-            if ( i > 3 ) {
-                sb.append("/");
-            }
-            sb.append(part);
+        // strip the '//' from the http://
+        if (!parts[1].startsWith("//")) {
+            throw new IllegalArgumentException("VP_BASE_URL[" + url + "] lacks ://!");
         }
-        String path = sb.toString();
-        if (log.isDebugEnabled()) log.debug("host " + host + ", port " + port + ", path " + path);
+        String host = parts[1].substring(2);
+        // now handle port and base
+        parts = parts[2].split("/");
+        String port = parts[0];
+        String pathBase = StringUtil.join(parts, 1, parts.length, "/");
+
+        // build path according to namespace
+        String path = pathBase + "/" + createUrlFromServiceContract(extractor);
+        if ( log.isDebugEnabled() ) {
+            log.debug("host " + host + ", port " + port + ", path " + path);
+        }
         message.setOutboundProperty("NT_ENDPOINT_HOST", host);
         message.setOutboundProperty("NT_ENDPOINT_PORT", port);
         message.setOutboundProperty("NT_ENDPOINT_PATH", path);
     }
 
-    public static void setEndpointPortOverride(String port) {
-        portOverride = port;
+    private String createUrlFromServiceContract(Extractor extractor) {
+        String[] parts = extractor.getServiceContractUri().split(":");
+        StringBuilder sb = new StringBuilder();
+        // start at 2 to skip urn:riv:
+        for ( int i = 2; i < parts.length; i++ ) {
+            String part = parts[i];
+            if ( sb.length() > 0 ) {
+                sb.append("/");
+            }
+            // the service contract uri adds "Responder" to the name of the service contract
+            if ( part.endsWith("Responder") ) {
+                part = part.substring(0, part.length() - "Responder".length());
+            }
+            sb.append(part);
+        }
+        sb.append("/").append(extractor.getRivtaVersion());
+        return sb.toString();
     }
 
 

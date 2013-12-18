@@ -19,12 +19,11 @@
  */
 package se.skltp.nt.intsvc.dynamicFlows;
 
-import groovy.text.GStringTemplateEngine;
-import groovy.text.Template;
-
 import java.net.URL;
 import java.util.Map;
 
+import groovy.text.GStringTemplateEngine;
+import groovy.text.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class SourceCodeGenerator {
 		}
 	}
 
-	public String generateContent(Map<String, Object> parameters) {
+	public String generateContent(Map<String,Object> parameters) {
 		try {
 			String content = template.make(parameters).toString();
 			log.debug("Generated content:\n{}", content);

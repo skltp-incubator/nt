@@ -88,7 +88,7 @@
 
     <!-- set to debug to see property extraction -->
     <logger name="se.skltp.nt.intsvc.CreatePropsAndConvertToStringTransformer">
-   		<level value="INFO" />
+   		<level value="DEBUG" />
    	</logger>
 
 	<root>

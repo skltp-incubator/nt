@@ -3,12 +3,12 @@ package se.skltp.nt.receiveservice;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import se.rivta.itintegration.notification.ReceiveNotification.v1.rivtabp21.ReceiveNotificationResponderInterface;
 import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationResponseType;
 import se.rivta.itintegration.notification.ReceiveNotificationResponder.v1.rivtabp21.ReceiveNotificationType;
 import se.rivta.itintegration.notification.v1.Filter;
 import se.skltp.nt.NtMuleServer;
+import se.skltp.nt.svc.ConfigProperties;
 
 import static se.skltp.nt.NtMuleServer.getAddress;
 
@@ -16,7 +16,7 @@ public class ReceiveServiceTestConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiveServiceTestConsumer.class);
 
-    private static final RecursiveResourceBundle rb = NtMuleServer.getRb();
+    private static final ConfigProperties rb = NtMuleServer.getConfigProperties();
 
     private ReceiveNotificationResponderInterface _service = null;
 

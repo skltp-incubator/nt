@@ -41,9 +41,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import se.skltp.nt.intsvc.subscriber.impl.SubscriberDatabaseImpl;
+import se.skltp.nt.intsvc.impl.SubscriberDatabaseImpl;
+import se.skltp.nt.svc.ConfigProperties;
+import sun.net.www.protocol.http.HttpURLConnection;
 
-//import riv.itintegration.registry.getlogicaladdresseesbyservicecontractresponder._1.GetLogicalAddresseesByServiceContractResponseType;
 
 /**
  * Sample config:
@@ -61,6 +62,11 @@ public class Initializer implements ApplicationContextAware, MuleContextNotifica
 		log.debug("Initializer.setApplicationContext()");
 		this.applicationContext = applicationContext;
 	}
+
+    private ConfigProperties configProperties;
+    public void setConfigProperties(ConfigProperties configProperties) {
+        this.configProperties = configProperties;
+    }
 
     static boolean starting = false;
 	static boolean stopping = false;
@@ -86,22 +92,12 @@ public class Initializer implements ApplicationContextAware, MuleContextNotifica
 
 				starting = true;
 
-//				List<String> logicalAdresses = getLogicalAdresses(notification.getMuleContext());
-//				List<String> flowConfigs = new CreateDynamicFlows(logicalAdresses).getContextConfiguration();
-//
-//				log.info("Starting {} flows...", flowConfigs.size());
-//				
-//				add(flowConfigs);
-//
-//				log.info("{} flows started", flowConfigs.size());
-
-
                 SubscriberDatabaseImpl subscriberDatabase = notification.getMuleContext().getRegistry().get("subscriber-database-bean");
                 subscriberDatabase.reload();
 				List<String> logicalAdresses = new ArrayList<String>(subscriberDatabase.getAllSubscriberLogicalAddresses());
                 log.info("subscriberDatabase " + subscriberDatabase.getClass().getName() + " loaded " + logicalAdresses.size() + " subscribers");
 
-				List<String> flowConfigs = new CreateDynamicFlows(logicalAdresses).getContextConfiguration();
+				List<String> flowConfigs = new CreateDynamicFlows(configProperties, logicalAdresses).getContextConfiguration();
 //
 				log.info("Starting {} flows...", flowConfigs.size());
 //				

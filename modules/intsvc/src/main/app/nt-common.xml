@@ -84,7 +84,9 @@ that supports decrypting encrypted property values -->
         <spring:import resource="classpath:soitoolkit-mule-sftp-connector-external.xml"/>
 
         <!-- Dynamic flows -->
-        <spring:bean id="initializer" class="se.skltp.nt.intsvc.dynamicFlows.Initializer"/>
+        <spring:bean id="initializer" class="se.skltp.nt.intsvc.dynamicFlows.Initializer">
+            <spring:property name="configProperties" ref="config-properties-bean"/>
+        </spring:bean>
 
     </spring:beans>
 
@@ -171,6 +173,16 @@ that supports decrypting encrypted property values -->
 
     <!-- TODO: Add global definitions here -->
     <!-- Subscriber  -->
-   	<spring:bean id="subscriber-database-bean" class="${SUBSCRIBER_DATABASE_CLASS}">
-   	</spring:bean>
+
+    <spring:bean id="config-properties-bean" class="se.skltp.nt.svc.impl.ConfigPropertiesImpl">
+        <spring:property name="configFiles" value="nt-config,nt-config-override"/>
+    </spring:bean>
+
+    <spring:bean id="subscriber-database-bean" class="${SUBSCRIBER_DATABASE_CLASS}">
+        <spring:property name="configProperties" ref="config-properties-bean"/>
+    </spring:bean>
+
+    <spring:bean id="filter" class="se.skltp.nt.intsvc.MessageFilter">
+        <spring:property name="subscriberDatabase" ref="subscriber-database-bean"/>
+    </spring:bean>
 </mule>

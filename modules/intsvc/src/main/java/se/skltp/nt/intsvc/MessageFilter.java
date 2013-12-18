@@ -5,7 +5,6 @@ import java.util.Map;
 import org.mule.el.context.MessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.skltp.nt.intsvc.subscriber.SubscriberDatabase;
 
 /**
  * Filter the message.

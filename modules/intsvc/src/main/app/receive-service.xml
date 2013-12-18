@@ -24,7 +24,9 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <cxf:proxy-service doc:name="Get raw envelope" payload="envelope"/>
 
         <custom-transformer class="se.skltp.nt.intsvc.CreatePropsAndConvertToStringTransformer"
-                            doc:name="Generate properties and convert to string"/>
+                            doc:name="Generate properties and convert to string">
+            <spring:property name="configProperties" ref="config-properties-bean"/>
+        </custom-transformer>
 
         <logger message="1 #[message.outboundProperties.keySet()]" level="INFO" doc:name="Logger"/>
         <logger message="2 #[message.payload]" level="INFO" doc:name="Logger"/>

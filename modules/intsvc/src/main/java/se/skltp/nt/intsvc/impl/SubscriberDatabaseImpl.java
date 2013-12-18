@@ -1,4 +1,4 @@
-package se.skltp.nt.intsvc.subscriber.impl;
+package se.skltp.nt.intsvc.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,7 +8,6 @@ import javax.xml.ws.handler.MessageContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
 import se.rivta.infrastructure.itintegration.registry.getlogicaladdresseesbyservicecontract.v2.rivtabp21.GetLogicalAddresseesByServiceContractResponderInterface;
 import se.rivta.infrastructure.itintegration.registry.getlogicaladdresseesbyservicecontract.v2.rivtabp21.GetLogicalAddresseesByServiceContractResponderService;
 import se.rivta.infrastructure.itintegration.registry.getlogicaladdresseesbyservicecontractresponder.v2.FilterType;
@@ -20,7 +19,9 @@ import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontrac
 import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontractsresponder.v2.GetSupportedServiceContractsResponseType;
 import se.rivta.infrastructure.itintegration.registry.getsupportedservicecontractsresponder.v2.GetSupportedServiceContractsType;
 import se.rivta.infrastructure.itintegration.registry.v2.ServiceContractNamespaceType;
-import se.skltp.nt.intsvc.subscriber.SubscriberDatabase;
+import se.skltp.nt.intsvc.SubscriberDatabase;
+import se.skltp.nt.svc.ConfigProperties;
+import se.skltp.nt.svc.impl.ConfigPropertiesImpl;
 
 /**
  * Wraps the TAK-information for routing.
@@ -33,10 +34,15 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberDatabaseImpl.class);
 
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-override");
-
     private HashMap<String, Map<String, Subscriber>> subscriberMap = new HashMap<String, Map<String, Subscriber>>();
     private Set<String> logicalAddressSet = new HashSet<String>();
+
+    // injected
+    private ConfigProperties configProperties;
+
+    public void setConfigProperties(ConfigProperties configProperties) {
+        this.configProperties = configProperties;
+    }
 
     @Override
     public boolean subscribesTo(String subscribersLogicalAddress, String serviceContractUri, String serviceDomain, String categorization) {
@@ -72,7 +78,7 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
      * @param serviceContractUri to load subscribers for
      */
     private void loadSubscribersFor(String serviceContractUri) {
-        String ourOwnLogicalAddress = rb.getString("NT_SERVICECONSUMER_HSAID");
+        String ourOwnLogicalAddress = configProperties.get("NT_SERVICECONSUMER_HSAID");
 
         subscriberMap.put(serviceContractUri, new HashMap<String, Subscriber>());
 
@@ -84,7 +90,7 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
         List<LogicalAddresseeRecordType> addressRecords = response.getLogicalAddressRecord();
         for ( LogicalAddresseeRecordType addressRecord : addressRecords ) {
             String logicalAddress = addressRecord.getLogicalAddress();
-            if (ourOwnLogicalAddress.equals(logicalAddress)) {
+            if ( ourOwnLogicalAddress.equals(logicalAddress) ) {
                 continue; // avoid talking to ourselves...
             }
             List<FilterType> filters = addressRecord.getFilter();
@@ -107,9 +113,9 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
     }
 
     protected GetLogicalAddresseesByServiceContractResponseType getLogicalAddresses(String serviceContractUri) {
-        String getLogicalAddressWsdlUrl = rb.getString("GET_LOGICAL_ADDRESSEES_WSDL_URL");
-        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
-        String ntHsaId = rb.getString("NT_SERVICECONSUMER_HSAID");
+        String getLogicalAddressWsdlUrl = configProperties.get("GET_LOGICAL_ADDRESSEES_WSDL_URL");
+        String vpLogicalAddress = configProperties.get("VP_LOGICAL_ADDRESS");
+        String ntHsaId = configProperties.get("NT_SERVICECONSUMER_HSAID");
 
         GetLogicalAddresseesByServiceContractType params = new GetLogicalAddresseesByServiceContractType();
         params.setServiceConsumerHsaId(ntHsaId);
@@ -127,11 +133,10 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
     }
 
 
-
     protected GetSupportedServiceContractsResponseType getSupportedContracts(String logicalAddress) {
-        String getSupportedContractsWsdlUrl = rb.getString("GET_SUPPORTED_CONTACTS_WSDL_URL");
-        String vpLogicalAddress = rb.getString("VP_LOGICAL_ADDRESS");
-        String ntHsaId = rb.getString("NT_SERVICECONSUMER_HSAID");
+        String getSupportedContractsWsdlUrl = configProperties.get("GET_SUPPORTED_CONTACTS_WSDL_URL");
+        String vpLogicalAddress = configProperties.get("VP_LOGICAL_ADDRESS");
+        String ntHsaId = configProperties.get("NT_SERVICECONSUMER_HSAID");
 
         GetSupportedServiceContractsType params = new GetSupportedServiceContractsType();
         params.setLogicalAdress(logicalAddress);
@@ -148,7 +153,7 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
     private void setOriginalConsumerId(String ntHsaId, Map<String, Object> requestContext) {
         @SuppressWarnings("unchecked")
         Map<String, Object> msgContext = (Map<String, Object>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
-        if (msgContext == null) {
+        if ( msgContext == null ) {
             msgContext = new HashMap<String, Object>();
             requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, msgContext);
         }
@@ -165,25 +170,25 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
      */
     @Override
     public void reload() {
-        String ntLogicalAddress = SubscriberDatabaseImpl.rb.getString("NT_SERVICECONSUMER_HSAID");
+        String ntLogicalAddress = configProperties.get("NT_SERVICECONSUMER_HSAID");
         GetSupportedServiceContractsResponseType supportedContracts = getSupportedContracts(ntLogicalAddress);
         List<ServiceContractNamespaceType> contracts = supportedContracts.getServiceContractNamespace();
         for ( ServiceContractNamespaceType contract : contracts ) {
             String serviceContractNs = contract.getServiceContractNamespace();
             String prefix1 = "urn:riv:infrastructure:itintegration:registry:GetSupportedServiceContracts";
             String prefix2 = "urn:riv:infrastructure:itintegration:registry:GetLogicalAddresseesByServiceContract";
-            if (serviceContractNs.startsWith(prefix1) || serviceContractNs.startsWith(prefix2)) {
-                if (log.isInfoEnabled()) {
+            if ( serviceContractNs.startsWith(prefix1) || serviceContractNs.startsWith(prefix2) ) {
+                if ( log.isInfoEnabled() ) {
                     log.info("Reload: skipping internal contract " + serviceContractNs);
                 }
             } else {
-                if (log.isInfoEnabled()) {
+                if ( log.isInfoEnabled() ) {
                     log.info("Reload: checking contract " + serviceContractNs);
                 }
                 loadSubscribersFor(serviceContractNs);
             }
         }
-        if (log.isInfoEnabled()) {
+        if ( log.isInfoEnabled() ) {
             describe();
         }
     }
@@ -316,6 +321,10 @@ public class SubscriberDatabaseImpl implements SubscriberDatabase {
 
     public static void main(String[] args) {
         SubscriberDatabaseImpl db = new SubscriberDatabaseImpl();
+        ConfigPropertiesImpl props = new ConfigPropertiesImpl();
+        props.setConfigFiles(new String[]{"nt-config", "nt-config-override"});
+        props.put("VP_BASE_URL", "http://localhost:8380/vp");
+        db.setConfigProperties(props);
         db.reload();
         db.describe();
     }

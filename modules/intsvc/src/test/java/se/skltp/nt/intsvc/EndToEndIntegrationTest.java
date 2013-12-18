@@ -44,9 +44,9 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(EndToEndIntegrationTest.class);
 
-    private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.getString("SERVICE_TIMEOUT_MS"));
+    private static final long SERVICE_TIMOUT_MS = Long.parseLong(rb.get("SERVICE_TIMEOUT_MS"));
 
-    private static final String LOGICAL_ADDRESS = rb.getString("NT_SERVICECONSUMER_HSAID");
+    private static final String LOGICAL_ADDRESS = rb.get("NT_SERVICECONSUMER_HSAID");
 
     @SuppressWarnings("unused")
     private static final String EXPECTED_ERR_TIMEOUT_MSG = "Read timed out";
@@ -93,9 +93,6 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
 
         final String logicalAddress = LOGICAL_ADDRESS;
 
-        // during testing, we can't rely on a VP to re-route to producers
-        CreatePropsAndConvertToStringTransformer.setEndpointPortOverride("8083");
-
         final ProcessNotificationType procRequest = createProcessNotificationRequest();
         dispatchAndWaitForServiceComponent(new Dispatcher() {
             public void doDispatch() {
@@ -129,7 +126,7 @@ public class EndToEndIntegrationTest extends AbstractTestCase implements Message
         assertQueueDepth(ERROR_LOG_QUEUE, 0);
 
         // Expect  info entries?
-        assertQueueDepth(INFO_LOG_QUEUE, 56);
+        assertQueueDepth(INFO_LOG_QUEUE, 80);
 
         List<ReceiveNotificationTestProducer.ReceiveData> recNotMessages = ReceiveNotificationTestProducer.getReceiveDataList();
 

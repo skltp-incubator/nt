@@ -18,11 +18,16 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>nt-modules-intsvc</artifactId>
+    <artifactId>nt-module-intsvc</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
 
     <dependencies>
+
+        <dependency>
+            <groupId>se.skltp.nt</groupId>
+            <artifactId>nt-composite-svc</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>se.skltp.nt</groupId>

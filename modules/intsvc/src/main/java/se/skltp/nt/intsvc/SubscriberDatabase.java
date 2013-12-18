@@ -1,4 +1,4 @@
-package se.skltp.nt.intsvc.subscriber;
+package se.skltp.nt.intsvc;
 
 import java.util.Set;
 

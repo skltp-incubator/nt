@@ -27,15 +27,17 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.util.MiscUtil;
+import se.skltp.nt.svc.ConfigProperties;
 
 public class CreateDynamicFlows  {
 
     private static final Logger log = LoggerFactory.getLogger(CreateDynamicFlows.class);
-    private final Map<String, Object> propertyMap;
-    
-    public CreateDynamicFlows(List<String> logicalAdresses) {
-        propertyMap = PropertyUtil.getResolvedProperties();
-        propertyMap.put("LOGICAL_ADDRESSES", logicalAdresses);
+    private final ConfigProperties configProperties;
+    private List<String> logicalAdresses;
+
+    public CreateDynamicFlows(ConfigProperties configProperties, List<String> logicalAdresses) {
+        this.configProperties = configProperties;
+        this.logicalAdresses = logicalAdresses;
     }
     
     public List<String> getContextConfiguration() {
@@ -46,7 +48,7 @@ public class CreateDynamicFlows  {
         log.info("Loading static flows...");
         do {
             String param = "STATIC_FLOW_" + ++flowNo;
-            configFile = propertyMap.get(param);
+            configFile = configProperties.get(param);
             if (configFile == null) {
                 flowNo--;
                 log.info("Stop loading static configurations, loaded {} config files", flowNo);
@@ -67,7 +69,7 @@ public class CreateDynamicFlows  {
         log.info("Loading dynamic flows...");
         do {
             String param = "DYNAMIC_FLOW_" + ++flowNo;
-            templateFile = propertyMap.get(param);
+            templateFile = configProperties.get(param);
             if (templateFile == null) {
                 flowNo--;
                 log.info("Stop loading template files for dynamic flows, loaded {} config files", flowNo);
@@ -76,6 +78,8 @@ public class CreateDynamicFlows  {
                 // Generate the actual source code
                 log.info("Generate dynamic flow #{} from template file {}", flowNo, templateFile);
                 SourceCodeGenerator scg = new SourceCodeGenerator(templateFile.toString());
+                Map<String,Object> propertyMap = configProperties.getAsPropertyMap();
+                propertyMap.put("LOGICAL_ADDRESSES", logicalAdresses);
                 String sourceCode = scg.generateContent(propertyMap);
                 log.debug("Generated dynamic flow #{}, length {}", flowNo, sourceCode.length());
 

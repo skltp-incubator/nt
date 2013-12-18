@@ -26,7 +26,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
     <dependencies>
         <dependency>
             <groupId>se.skltp.nt</groupId>
-            <artifactId>nt-modules-intsvc</artifactId>
+            <artifactId>nt-module-intsvc</artifactId>
         </dependency>
     </dependencies>
 

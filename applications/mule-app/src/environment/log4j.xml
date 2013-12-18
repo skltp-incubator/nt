@@ -80,7 +80,7 @@
 	</logger>
 
     <!-- Set to debug to see filtering and adding of subscribers -->
-    <logger name="se.skltp.nt.intsvc.subscriber.impl.SubscriberDatabaseImpl">
+    <logger name="se.skltp.nt.intsvc.impl.SubscriberDatabaseImpl">
    		<level value="INFO" />
    	</logger>
 
@@ -89,9 +89,14 @@
    		<level value="INFO" />
    	</logger>
 
+    <!-- set to debug to see property extraction -->
+    <logger name="se.skltp.nt.intsvc.XmlToXmlStreamReaderWithAddressChange">
+   		<level value="INFO" />
+   	</logger>
+
 
 	<root>
-		<priority value="INFO" />
+		<priority value="WARN" />
 
         <!--
 		<appender-ref ref="CONSOLE" />

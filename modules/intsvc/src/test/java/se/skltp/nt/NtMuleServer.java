@@ -6,8 +6,8 @@ import java.lang.reflect.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.soitoolkit.commons.mule.test.StandaloneMuleServer;
-import org.soitoolkit.commons.mule.util.RecursiveResourceBundle;
-import se.skltp.nt.intsvc.CreatePropsAndConvertToStringTransformer;
+import se.skltp.nt.svc.ConfigProperties;
+import se.skltp.nt.svc.impl.ConfigPropertiesImpl;
 
 
 public class NtMuleServer {
@@ -17,11 +17,10 @@ public class NtMuleServer {
  
 
 	private static final Logger logger = LoggerFactory.getLogger(NtMuleServer.class);
-    private static final RecursiveResourceBundle rb = new RecursiveResourceBundle("nt-config", "nt-config-override");
+    private static ConfigProperties configProperties = new ConfigPropertiesImpl("nt-config", "nt-config-override");
 
 	public static void main(String[] args) throws Exception {
-	
- 
+
         // Configure the mule-server:
         //
         // Arg #1: The name of the Mule Server
@@ -33,9 +32,6 @@ public class NtMuleServer {
         //         Note: Actually loads all *-service.xml files that are specified in the file "src/main/app/mule-deploy.properties"
         //
         StandaloneMuleServer muleServer = new StandaloneMuleServer(MULE_SERVER_ID, true, true);
-
-        // during testing, we can't rely on a VP to re-route to producers
-        CreatePropsAndConvertToStringTransformer.setEndpointPortOverride("8083");
 
         Field f = muleServer.getClass().getDeclaredField("muleConfig");
         f.setAccessible(true);
@@ -54,7 +50,7 @@ public class NtMuleServer {
      */
     public static String getAddress(String serviceUrlPropertyName) {
 
-        String url = rb.getString(serviceUrlPropertyName);
+        String url = configProperties.get(serviceUrlPropertyName);
 
 	    logger.info("URL: {}", url);
     	return url;
@@ -62,10 +58,10 @@ public class NtMuleServer {
     }
 
     public static String getProperty(String name) {
-        return rb.getString(name);
+        return configProperties.get(name);
     }
 
-    public static RecursiveResourceBundle getRb() {
-        return rb;
+    public static ConfigProperties getConfigProperties() {
+        return configProperties;
     }
 }

@@ -22,9 +22,9 @@
 <% if (LOGICAL_ADDRESSES.size() > 0) { %>
     <!-- JMS Connector for the durable topic subscribers -->
     <jms:connector
-        name="skltp-ei-jms-topic-connector"
+        name="skltp-nt-jms-topic-connector"
         connectionFactory-ref="soitoolkit-jms-connection-factory"
-        clientId="SKLTP-EI"
+        clientId="SKLTP-NT"
         durable="true" 
         persistentDelivery="true"
         maxRedelivery="-1"
@@ -36,15 +36,11 @@
 
 
 <% LOGICAL_ADDRESSES.each { LOGICAL_ADDRESS -> %>
-    <spring:beans>
-        <spring:bean id="filter" class="se.skltp.nt.intsvc.MessageFilter">
-            <spring:property name="subscriberDatabase" ref="subscriber-database-bean"/>
-        </spring:bean>
-    </spring:beans>
 
     <flow name="notify-service-${LOGICAL_ADDRESS}">
-        <jms:inbound-endpoint 
-            connector-ref="skltp-ei-jms-topic-connector"
+
+        <jms:inbound-endpoint
+            connector-ref="skltp-nt-jms-topic-connector"
             topic="${NOTIFY_TOPIC}" 
             durableName="${LOGICAL_ADDRESS}" 
             transformer-refs="logMsgIn" 
@@ -55,7 +51,7 @@
         <choice doc:name="Filter">
             <when expression='#[app.registry.filter.allows("${LOGICAL_ADDRESS}", message)]'>
 
-                <logger message="[${LOGICAL_ADDRESS}] From Queue: \n#[payload]" level="INFO" doc:name="Logger"/>
+                <logger level="DEBUG"  message="[${LOGICAL_ADDRESS}] From Queue: \n#[payload]" doc:name="Logger"/>
 
                 <set-variable doc:name="setLogicalAddress" value="${LOGICAL_ADDRESS}" variableName="logicalAddress"/>
 
@@ -70,10 +66,13 @@
 
                 <cxf:proxy-client doc:name="SOAP" payload="envelope"/>
 
-                <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="OUR-HSA-ID" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+                <set-property propertyName="x-rivta-original-serviceconsumer-hsaid" value="${NT_SERVICECONSUMER_HSAID}" doc:name="x-rivta-original-serviceconsumer-hsaid" />
+
+                <logger level="INFO"  message="[${LOGICAL_ADDRESS}] Sending #[message.inboundProperties.NT_SERVICE_CONTRACT_URI], auth as ${NT_SERVICECONSUMER_HSAID} to http://#[message.inboundProperties.NT_ENDPOINT_HOST]:#[message.inboundProperties.NT_ENDPOINT_PORT]/#[message.inboundProperties.NT_ENDPOINT_PATH]"/>
 
                 <http:outbound-endpoint exchange-pattern="request-response"
                     doc:name="HTTP" method="POST"
+                    transformer-refs="logMsgOut"
                     host="#[message.inboundProperties.NT_ENDPOINT_HOST]"
                     port="#[message.inboundProperties.NT_ENDPOINT_PORT]"
                     path="#[message.inboundProperties.NT_ENDPOINT_PATH]">
@@ -82,7 +81,7 @@
 
             </when>
             <otherwise>
-                <logger message="${LOGICAL_ADDRESS}: Filtered out #[message.inboundProperties.NT_SERVICE_CONTRACT_URI + '/' + message.inboundProperties.NT_SERVICE_DOMAIN + '/' + message.inboundProperties.NT_CATEGORIZATION]"
+                <logger message="[${LOGICAL_ADDRESS}] Filtered out #[message.inboundProperties.NT_SERVICE_CONTRACT_URI + '/' + message.inboundProperties.NT_SERVICE_DOMAIN + '/' + message.inboundProperties.NT_CATEGORIZATION]"
                  level="INFO" doc:name="Logger"/>
             </otherwise>
         </choice>
