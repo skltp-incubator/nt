@@ -41,7 +41,7 @@ DON'T CHANGE THE CONTENT OF THIS COMMENT UNLESS YOU REALLY KNOW WHAT YOU ARE DOI
         </dependency>
 
         <dependency>
-            <groupId>se.rivta.infrastructure.itintegration</groupId>
+            <groupId>se.skltp.infrastructure.itintegration</groupId>
             <artifactId>ServiceContracts_infrastructure_itintegration_registry</artifactId>
         </dependency>
 
